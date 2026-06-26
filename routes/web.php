@@ -20,19 +20,31 @@ Route::post('/register', [AuthController::class, 'register']);
 // Jalur Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Jalur Lopgin Admin dan Petugas
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login']);
+
+Route::get('/petugas/login', [PetugasController::class, 'showLogin'])->name('petugas.login');
+Route::post('/petugas/login', [PetugasController::class, 'login']);
 
 // Group route untuk Admin agar aman
 Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     });
+    Route::get('/admin/identifikasi', function () {
+        return view('admin.v_laporan.index');
+    });
+    Route::get('/admin/detail-identifikasi', function () {
+        return view('admin.v_laporan.detail');
+    });
+    Route::get('/admin/pengguna', function () {
+        return view('admin.v_pengguna.index');
+    });
     Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 });
 
-Route::get('/petugas/login', [PetugasController::class, 'showLogin'])->name('petugas.login');
-Route::post('/petugas/login', [PetugasController::class, 'login']);
+
 
 Route::middleware('auth:petugas')->group(function () {
     Route::get('/petugas/dashboard', function () {

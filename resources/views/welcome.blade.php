@@ -9,8 +9,8 @@
     <main class="relative w-full flex-grow flex items-center overflow-hidden">
 
         <!-- Latar Belakang Peta -->
-        <div class="absolute inset-y-0 right-0 w-full lg:w-2/3 bg-no-repeat bg-right lg:bg-center bg-contain opacity-20 pointer-events-none"
-             style="background-image: url('{{ asset('images/peta-hitam.png') }}');">
+        <div class="absolute inset-y-0 right-0 w-full lg:w-2/3 bg-no-repeat bg-right bg-[length:150%_150%] lg:bg-center bg-contain opacity-20 pointer-events-none max-w-0 lg:max-w-full"
+             style="background-image: url('{{ asset('images/peta.png') }}');">
         </div>
 
         <div class="relative z-10 max-w-7xl mx-auto px-20 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">

@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('lokasi'); // Sesuai kolom di ERD
             $table->date('tanggal_laporan');
             $table->enum('status_laporan', ['Menunggu', 'Diproses', 'Selesai', 'Ditolak'])->default('Menunggu');
+            $table->text('catatan_laporan')->nullable();
+            $table->enum('prioritas_laporan', ['Rendah', 'Sedang', 'Tinggi'])->default('Sedang');
             $table->timestamps();
 
         // Foreign Key Constraints
