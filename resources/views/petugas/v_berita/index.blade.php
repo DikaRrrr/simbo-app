@@ -4,7 +4,8 @@
 @section('page_title', 'Mengelola Berita')
 
 @section('header_action')
-    <a href="{{ route('petugas.berita.create') }}" class="rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white hover:bg-primary/90">
+    <a href="{{ route('petugas.berita.create') }}"
+        class="rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white hover:bg-primary/90">
         Tambah Berita
     </a>
 @endsection
@@ -30,18 +31,21 @@
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div>
                     <h3 class="font-bold font-montserrat text-lg">Daftar Berita</h3>
-                    <p class="text-sm text-neutral/50 mt-1">Data terhubung ke tabel berita dan hanya menampilkan berita milik petugas login.</p>
+                    <p class="text-sm text-neutral/50 mt-1">Data terhubung ke tabel berita dan hanya menampilkan berita
+                        milik petugas login.</p>
                 </div>
 
                 <form method="GET" action="{{ route('petugas.berita.index') }}" class="flex flex-col sm:flex-row gap-3">
                     <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari berita..."
                         class="w-full sm:w-64 rounded-xl border border-tertiary bg-inputBg px-4 py-3 text-sm outline-none focus:border-primary focus:bg-white">
-                    <select name="status" class="rounded-xl border border-tertiary bg-inputBg px-4 py-3 text-sm outline-none focus:border-primary focus:bg-white">
+                    <select name="status"
+                        class="rounded-xl border border-tertiary bg-inputBg px-4 py-3 text-sm outline-none focus:border-primary focus:bg-white">
                         <option value="">Semua Status</option>
                         <option value="aktif" @selected(request('status') === 'aktif')>Aktif</option>
                         <option value="diarsipkan" @selected(request('status') === 'diarsipkan')>Diarsipkan</option>
                     </select>
-                    <button class="rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white hover:bg-primary/90">Filter</button>
+                    <button
+                        class="rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white hover:bg-primary/90">Filter</button>
                 </form>
             </div>
         </div>
@@ -61,22 +65,33 @@
                 <tbody class="divide-y divide-tertiary">
                     @forelse ($berita as $item)
                         <tr>
-                            <td class="px-6 py-4 font-mono font-bold">#{{ str_pad($item->id_berita, 3, '0', STR_PAD_LEFT) }}</td>
-                            <td class="px-6 py-4 font-semibold">{{ \Illuminate\Support\Str::limit($item->judul_berita, 45) }}</td>
-                            <td class="px-6 py-4 text-neutral/70">{{ \Illuminate\Support\Str::limit(strip_tags($item->isi_berita), 70) }}</td>
-                            <td class="px-6 py-4 text-neutral/60">{{ optional($item->tanggal_publish)->format('d M Y H:i') }}</td>
+                            <td class="px-6 py-4 font-mono font-bold">#{{ str_pad($item->id_berita, 3, '0', STR_PAD_LEFT) }}
+                            </td>
+                            <td class="px-6 py-4 font-semibold">
+                                {{ \Illuminate\Support\Str::limit($item->judul_berita, 45) }}</td>
+                            <td class="px-6 py-4 text-neutral/70">
+                                {{ \Illuminate\Support\Str::limit(strip_tags($item->isi_berita), 70) }}</td>
+                            <td class="px-6 py-4 text-neutral/60">
+                                {{ optional($item->tanggal_publish)->format('d M Y H:i') }}</td>
                             <td class="px-6 py-4">
-                                <span class="{{ $item->status_arsip === 'aktif' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700' }} text-[10px] font-bold px-3 py-1 rounded-full uppercase">
+                                <span
+                                    class="{{ $item->status_arsip === 'aktif' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700' }} text-[10px] font-bold px-3 py-1 rounded-full uppercase">
                                     {{ $item->status_arsip }}
                                 </span>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
-                                    <a href="{{ route('petugas.berita.edit', $item->id_berita) }}" class="text-primary font-bold hover:underline">Edit</a>
-                                    <form action="{{ route('petugas.berita.destroy', $item->id_berita) }}" method="POST" onsubmit="return confirm('Hapus berita ini?')">
+                                    <a href="{{ route('petugas.berita.edit', $item->id_berita) }}"
+                                        class="text-primary font-bold hover:underline">Edit</a>
+                                    <form action="{{ route('petugas.berita.destroy', $item->id_berita) }}" method="POST"
+                                        class="form-hapus-berita inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-700 font-bold hover:underline">Hapus</button>
+                                        <button type="button"
+                                            class="btn-hapus-berita text-red-700 font-bold hover:underline"
+                                            data-judul="{{ $item->judul_berita }}">
+                                            Hapus
+                                        </button>
                                     </form>
                                 </div>
                             </td>
@@ -95,3 +110,33 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnHapus = document.querySelectorAll('.btn-hapus-berita');
+
+            btnHapus.forEach(button => {
+                button.addEventListener('click', function() {
+                    const form = this.closest('.form-hapus-berita');
+                    const judulBerita = this.getAttribute('data-judul');
+
+                    Swal.fire({
+                        title: 'Hapus Berita?',
+                        html: `Berita <strong>"${judulBerita}"</strong> akan dihapus permanen dan tidak dapat dikembalikan.`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#9ca3af',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal',
+                        reverseButtons: true,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+@endpush
