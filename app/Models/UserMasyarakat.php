@@ -16,6 +16,7 @@ class UserMasyarakat extends Authenticatable
         'email',
         'password',
         'alamat',
+        'status_akun',
     ];
 
     protected $hidden = [

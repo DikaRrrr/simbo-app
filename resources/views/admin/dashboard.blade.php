@@ -4,36 +4,6 @@
 
         <main class="ml-[250px] w-[calc(100%-250px)]">
 
-            <header
-                class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-7 sticky top-0 z-40 shadow-sm">
-
-                <div
-                    class="w-[470px] h-11 bg-inputBg rounded-full flex items-center gap-3 px-5 border border-transparent focus-within:border-primary/30 focus-within:bg-white transition-all">
-                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                    <input type="text" placeholder="Cari laporan, pengguna, atau arsip..."
-                        class="w-full bg-transparent outline-none text-sm font-worksans placeholder:text-gray-500" />
-                </div>
-
-                <div class="flex items-center gap-4 text-right">
-                    <div>
-                        <h4 class="text-sm font-bold text-neutral">
-                            {{ Auth::guard('admin')->user()->nama_admin ?? 'Admin' }}</h4>
-                        <p class="text-[11px] text-gray-500 font-medium">Super Administrator</p>
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-full bg-primary/10 text-primary border border-primary/20 flex items-center justify-center">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z">
-                            </path>
-                        </svg>
-                    </div>
-                </div>
-            </header>
-
             <section class="p-7 font-worksans">
 
                 <div class="mb-8 flex items-end justify-between">

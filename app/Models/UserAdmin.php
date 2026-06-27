@@ -11,6 +11,6 @@ class UserAdmin extends Authenticatable
     
     protected $table = 'user_admin';
     protected $primaryKey = 'id_admin';
-    protected $fillable = ['email', 'password', 'nama_admin'];
+    protected $fillable = ['email', 'password', 'nama_admin', 'status_akun'];
     protected $hidden = ['password'];
 }

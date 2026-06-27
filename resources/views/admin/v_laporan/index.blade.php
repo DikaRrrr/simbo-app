@@ -5,37 +5,6 @@
 <!-- Main Content -->
 <main class="ml-[250px] w-[calc(100%-250px)] bg-dash-secondary min-h-screen font-worksans">
 
-    <!-- Topbar -->
-    <header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 sticky top-0 z-40 shadow-sm">
-        
-        <!-- Search Bar -->
-        <div class="w-[400px] h-11 rounded-full bg-inputBg flex items-center gap-3 px-5 border border-transparent focus-within:border-primary/30 focus-within:bg-white transition-all">
-            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            <input type="text" placeholder="Cari data laporan..."
-                class="w-full bg-transparent outline-none text-sm placeholder:text-gray-500 font-medium" />
-        </div>
-
-        <!-- Right Menu -->
-        <div class="flex items-center gap-6">
-            <!-- Notification -->
-            <button class="relative p-2 text-gray-500 hover:text-primary transition-colors rounded-full hover:bg-gray-100">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-            </button>
-
-            <!-- Profil -->
-            <div class="flex items-center gap-3">
-                <div class="text-right hidden md:block">
-                    <h4 class="text-sm font-bold text-neutral">{{ Auth::guard('admin')->user()->nama_admin ?? 'Admin' }}</h4>
-                    <p class="text-[11px] text-gray-500 font-medium">Super Administrator</p>
-                </div>
-                <div class="w-10 h-10 rounded-full border border-primary/20 bg-primary/10 flex items-center justify-center text-primary font-bold shadow-sm">
-                    {{ substr(Auth::guard('admin')->user()->nama_admin ?? 'A', 0, 1) }}
-                </div>
-            </div>
-        </div>
-    </header>
-
     <!-- Page Area -->
     <section class="p-8">
 

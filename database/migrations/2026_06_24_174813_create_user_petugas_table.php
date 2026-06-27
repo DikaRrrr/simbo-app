@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('wilayah_tugas');
+            $table->enum('status_akun', ['Aktif', 'Nonaktif'])->default('Aktif');
             $table->timestamps();
         });
     }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nama_admin');
             $table->string('email')->unique();
             $table->string('password');
+            $table->enum('status_akun', ['Aktif', 'Nonaktif'])->default('Aktif');
             $table->timestamps();
         });
     }
