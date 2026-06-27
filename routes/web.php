@@ -36,12 +36,12 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     });
-    Route::get('/admin/identifikasi', function () {
-        return view('admin.v_laporan.index', ['pageTitle' => 'Identifikasi']);
-    });
+    Route::get('admin/identifikasi', [AdminController::class, 'identifikasiIndex'])->name('identifikasi.index');
     Route::get('/admin/detail-identifikasi', function () {
         return view('admin.v_laporan.detail', ['pageTitle' => 'Detail Laporan']);
     });
+    Route::get('/admin/identifikasi/detail/{id}', [AdminController::class, 'detailIdentifikasi'])->name('admin.identifikasi.detail');
+    Route::put('/admin/identifikasi/assign/{id}', [AdminController::class, 'assignPetugas'])->name('admin.identifikasi.assign');
     Route::get('/admin/pengguna', [AdminController::class, 'indexPengguna'])->name('admin.pengguna.index');
     Route::get('/admin/pengguna/tambah', function () {
         return view('admin.v_pengguna.create', ['pageTitle' => 'Tambah Pengguna']);

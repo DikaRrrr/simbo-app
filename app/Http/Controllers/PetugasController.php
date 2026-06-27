@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Berita;
@@ -8,9 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class PetugasController extends Controller
 {
-    public function showLogin() { return view('petugas.login'); }
+    public function showLogin()
+    {
+        return view('petugas.login');
+    }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $credentials = $request->validate([
             'email' => 'required',
             'password' => 'required',
@@ -23,7 +28,8 @@ class PetugasController extends Controller
         return back()->withErrors(['email' => 'Login gagal!']);
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         Auth::guard('petugas')->logout();
         return redirect('/petugas/login');
     }
@@ -61,12 +67,21 @@ class PetugasController extends Controller
 
     public function laporanIndex(Request $request)
     {
-        $query = Laporan::with(['masyarakat', 'kategori', 'petugas']);
+        // 1. Ambil ID petugas yang sedang login
+        // Sesuaikan 'petugas' dengan nama guard auth yang kamu gunakan, 
+        // atau gunakan Auth::user()->id_petugas jika menggunakan default auth.
+        $petugasLoginId = Auth::guard('petugas')->user()->id_petugas;
 
+        // 2. Tambahkan kondisi where('id_petugas', ...) agar hanya mengambil tugas miliknya
+        $query = Laporan::with(['masyarakat', 'kategori', 'petugas'])
+            ->where('id_petugas', $petugasLoginId);
+
+        // 3. Filter berdasarkan status (opsional dari request)
         if ($request->filled('status')) {
             $query->where('status_laporan', $request->status);
         }
 
+        // 4. Filter berdasarkan kata kunci pencarian
         if ($request->filled('q')) {
             $keyword = $request->q;
             $query->where(function ($builder) use ($keyword) {
@@ -76,6 +91,7 @@ class PetugasController extends Controller
             });
         }
 
+        // 5. Urutkan dan Pagination
         $laporan = $query->latest('created_at')->paginate(10)->withQueryString();
 
         return view('petugas.v_laporan.index', compact('laporan'));

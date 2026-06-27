@@ -8,6 +8,8 @@ class UserMasyarakat extends Authenticatable
 {
     protected $table = 'user_masyarakat';
     protected $primaryKey = 'id_masyarakat';
+    public $incrementing  = true;
+    public $timestamps    = false;
 
     protected $fillable = [
         'nik',

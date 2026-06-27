@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Laporan;
 use App\Models\UserAdmin;
 use App\Models\UserMasyarakat;
 use App\Models\UserPetugas;
@@ -36,6 +37,47 @@ class AdminController extends Controller
     {
         Auth::guard('admin')->logout();
         return redirect('/admin/login');
+    }
+
+    public function identifikasiIndex()
+    {
+        $laporans = Laporan::where('status_laporan', 'Menunggu')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('admin.v_laporan.index', compact('laporans'), ['pageTitle' => 'Identifikasi Laporan']);
+    }
+
+    public function detailIdentifikasi($id)
+    {
+        $laporan = Laporan::with('masyarakat')->findOrFail($id); // ✅ ganti 'userMasyarakat' → 'masyarakat'
+
+        $petugas = UserPetugas::where('status_akun', 'Aktif')->get();
+
+        return view('admin.v_laporan.detail', compact('laporan', 'petugas'));
+    }
+
+    // 2. Method untuk memproses penugasan
+    public function assignPetugas(Request $request, $id)
+    {
+        $request->validate([
+            'petugas_id'    => 'required',
+            'prioritas'     => 'required|in:rendah,sedang,tinggi,Rendah,Sedang,Tinggi', // Sesuaikan
+            'catatan_admin' => 'nullable|string'
+        ]);
+
+        $laporan = Laporan::findOrFail($id);
+
+        // Update data
+        $laporan->update([
+            'id_petugas'        => $request->petugas_id,
+            'status_laporan'    => 'Diproses',
+            'prioritas_laporan' => ucfirst($request->prioritas), // Mengubah jadi kapital di depan (Rendah/Sedang/Tinggi)
+            'catatan_laporan'   => $request->catatan_admin,
+        ]);
+
+        return redirect()->route('identifikasi.index')
+            ->with('success', 'Laporan berhasil ditugaskan ke petugas!');
     }
 
     public function indexPengguna()

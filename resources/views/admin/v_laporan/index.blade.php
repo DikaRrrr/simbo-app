@@ -21,40 +21,59 @@
         <!-- Filter Card -->
         <div class="bg-white border border-gray-200 rounded-xl p-5 mb-6 shadow-sm">
             <div class="flex flex-wrap items-center justify-between gap-4">
-                
+
                 <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
                     <!-- Search Filter -->
-                    <div class="w-full lg:w-[300px] h-10 border border-gray-300 bg-white rounded-lg flex items-center gap-2 px-3 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
-                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <div
+                        class="w-full lg:w-[300px] h-10 border border-gray-300 bg-white rounded-lg flex items-center gap-2 px-3 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
                         <input type="text" placeholder="Cari berdasarkan ID atau subjek..."
                             class="w-full bg-transparent outline-none text-xs placeholder:text-gray-400" />
                     </div>
 
                     <!-- Kategori Dropdown -->
                     <div class="relative">
-                        <select class="h-10 appearance-none border border-gray-300 bg-white rounded-lg pl-4 pr-10 text-xs text-gray-600 outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer">
+                        <select
+                            class="h-10 appearance-none border border-gray-300 bg-white rounded-lg pl-4 pr-10 text-xs text-gray-600 outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer">
                             <option>Semua Kategori</option>
                             <option>Infrastruktur</option>
                             <option>Lingkungan</option>
                             <option>Keamanan</option>
                         </select>
-                        <svg class="w-4 h-4 text-gray-500 absolute right-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-4 h-4 text-gray-500 absolute right-3 top-3 pointer-events-none" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
                     </div>
 
                     <!-- Prioritas Dropdown -->
                     <div class="relative">
-                        <select class="h-10 appearance-none border border-gray-300 bg-white rounded-lg pl-4 pr-10 text-xs text-gray-600 outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer">
+                        <select
+                            class="h-10 appearance-none border border-gray-300 bg-white rounded-lg pl-4 pr-10 text-xs text-gray-600 outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer">
                             <option>Prioritas</option>
                             <option>Tinggi</option>
                             <option>Sedang</option>
                             <option>Rendah</option>
                         </select>
-                        <svg class="w-4 h-4 text-gray-500 absolute right-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-4 h-4 text-gray-500 absolute right-3 top-3 pointer-events-none" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
                     </div>
                 </div>
 
-                <button class="h-10 px-5 border border-gray-300 bg-gray-50 hover:bg-gray-100 rounded-lg text-xs font-bold text-gray-600 flex items-center gap-2 transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                <button
+                    class="h-10 px-5 border border-gray-300 bg-gray-50 hover:bg-gray-100 rounded-lg text-xs font-bold text-gray-600 flex items-center gap-2 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
+                        </path>
+                    </svg>
                     Filter Lainnya
                 </button>
             </div>
@@ -66,142 +85,151 @@
                 <table class="w-full border-collapse">
                     <thead>
                         <tr class="bg-gray-50 border-b border-gray-200">
-                            <th class="text-left py-4 px-6 text-xs font-bold uppercase tracking-wider text-gray-500">ID Laporan</th>
-                            <th class="text-left py-4 px-6 text-xs font-bold uppercase tracking-wider text-gray-500">Subjek</th>
-                            <th class="text-left py-4 px-6 text-xs font-bold uppercase tracking-wider text-gray-500">Kategori</th>
-                            <th class="text-left py-4 px-6 text-xs font-bold uppercase tracking-wider text-gray-500">Tanggal Diterima</th>
-                            <th class="text-left py-4 px-6 text-xs font-bold uppercase tracking-wider text-gray-500">Status</th>
-                            <th class="text-right py-4 px-6 text-xs font-bold uppercase tracking-wider text-gray-500">Aksi</th>
+                            <th class="text-left py-4 px-6 text-xs font-bold uppercase tracking-wider text-gray-500">ID
+                                Laporan</th>
+                            <th class="text-left py-4 px-6 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                Subjek</th>
+                            <th class="text-left py-4 px-6 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                Kategori</th>
+                            <th class="text-left py-4 px-6 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                Tanggal Diterima</th>
+                            <th class="text-left py-4 px-6 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                Status</th>
+                            <th class="text-right py-4 px-6 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        
-                        <!-- Row 1 -->
-                        <tr class="hover:bg-gray-50/80 transition-colors">
-                            <td class="py-4 px-6">
-                                <span class="text-sm font-bold text-neutral">#INF-2023-090</span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm font-semibold text-neutral">Pohon Tumbang</p>
-                                <p class="text-xs text-gray-500 mt-0.5">Jl. Sudirman</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold border border-indigo-100">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                                    Infrastruktur
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm font-semibold text-gray-600">12 Okt 2023</p>
-                                <p class="text-xs text-gray-400">08:30 WIB</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
-                                    Pending
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <a href="{{ url('/admin/identifikasi') }}" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-2 ml-auto">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                                    Identifikasi
-                                </a>
-                            </td>
-                        </tr>
+                        @forelse ($laporans as $laporan)
+                            <tr class="hover:bg-gray-50/80 transition-colors">
 
-                        <!-- Row 2 -->
-                        <tr class="hover:bg-gray-50/80 transition-colors">
-                            <td class="py-4 px-6">
-                                <span class="text-sm font-bold text-neutral">#ENV-2023-091</span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm font-semibold text-neutral">Tumpukan Sampah Liar</p>
-                                <p class="text-xs text-gray-500 mt-0.5">Pasar Induk</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    Lingkungan
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm font-semibold text-gray-600">12 Okt 2023</p>
-                                <p class="text-xs text-gray-400">09:15 WIB</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
-                                    Pending
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <a href="{{ url('/admin/identifikasi/1') }}" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-2 ml-auto">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                                    Identifikasi
-                                </a>
-                            </td>
-                        </tr>
+                                <td class="py-4 px-6">
+                                    <span class="text-sm font-bold text-neutral">
+                                        #RPT-{{ str_pad($laporan->id_laporan, 4, '0', STR_PAD_LEFT) }}
+                                    </span>
+                                </td>
 
-                        <!-- Row 3 -->
-                        <tr class="hover:bg-gray-50/80 transition-colors">
-                            <td class="py-4 px-6">
-                                <span class="text-sm font-bold text-neutral">#SEC-2023-092</span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm font-semibold text-neutral">Lampu Jalan Mati</p>
-                                <p class="text-xs text-gray-500 mt-0.5">Komplek A</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 text-xs font-bold border border-amber-100">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                                    Keamanan
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm font-semibold text-gray-600">11 Okt 2023</p>
-                                <p class="text-xs text-gray-400">20:45 WIB</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
-                                    Pending
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <a href="{{ url('admin/detail-identifikasi') }}" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-2 ml-auto">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                                    Identifikasi
-                                </a>
-                            </td>
-                        </tr>
+                                <td class="py-4 px-6">
+                                    <p class="text-sm font-semibold text-neutral">{{ $laporan->judul_laporan }}</p>
+                                    <p class="text-xs text-gray-500 mt-0.5">{{ Str::limit($laporan->lokasi, 40) }}</p>
+                                </td>
 
+                                <td class="py-4 px-6">
+                                    @if ($laporan->id_kategori == 1)
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold border border-indigo-100">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                                </path>
+                                            </svg>
+                                            Infrastruktur
+                                        </span>
+                                    @elseif($laporan->id_kategori == 2)
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                </path>
+                                            </svg>
+                                            Lingkungan
+                                        </span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 text-xs font-bold border border-amber-100">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                                </path>
+                                            </svg>
+                                            Keamanan
+                                        </span>
+                                    @endif
+                                </td>
+
+                                <td class="py-4 px-6">
+                                    <p class="text-sm font-semibold text-gray-600">
+                                        {{ \Carbon\Carbon::parse($laporan->tanggal_laporan)->translatedFormat('d M Y') }}
+                                    </p>
+                                    <p class="text-xs text-gray-400">
+                                        {{ \Carbon\Carbon::parse($laporan->tanggal_laporan)->format('H:i') }} WIB
+                                    </p>
+                                </td>
+
+                                <td class="py-4 px-6">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
+                                        {{ $laporan->status_laporan }}
+                                    </span>
+                                </td>
+
+                                <td class="py-4 px-6 text-right">
+                                    <a href="{{ url('/admin/identifikasi/detail/' . $laporan->id_laporan) }}"
+                                        class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-2 ml-auto w-max">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                                            </path>
+                                        </svg>
+                                        Identifikasi
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="py-8 text-center text-gray-500 text-sm font-medium">
+                                    Belum ada laporan baru yang menunggu untuk diidentifikasi.
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
-
-            <!-- Footer Pagination -->
-            <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
-                <p class="text-xs font-semibold text-gray-500">
-                    Menampilkan 1 sampai 3 dari 24 laporan pending
-                </p>
-                <div class="flex items-center gap-1.5">
-                    <button class="w-8 h-8 flex items-center justify-center border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                    </button>
-                    <button class="w-8 h-8 flex items-center justify-center bg-primary text-white text-xs font-bold rounded-lg shadow-sm">
-                        1
-                    </button>
-                    <button class="w-8 h-8 flex items-center justify-center border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 text-xs font-bold rounded-lg transition-colors">
-                        2
-                    </button>
-                    <button class="w-8 h-8 flex items-center justify-center border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 text-xs font-bold rounded-lg transition-colors">
-                        3
-                    </button>
-                    <button class="w-8 h-8 flex items-center justify-center border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                </div>
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                {{ $laporans->links('pagination::tailwind') }}
             </div>
+            </table>
+        </div>
+
+        <!-- Footer Pagination -->
+        <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <p class="text-xs font-semibold text-gray-500">
+                Menampilkan 1 sampai 3 dari 24 laporan pending
+            </p>
+            <div class="flex items-center gap-1.5">
+                <button
+                    class="w-8 h-8 flex items-center justify-center border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                        </path>
+                    </svg>
+                </button>
+                <button
+                    class="w-8 h-8 flex items-center justify-center bg-primary text-white text-xs font-bold rounded-lg shadow-sm">
+                    1
+                </button>
+                <button
+                    class="w-8 h-8 flex items-center justify-center border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 text-xs font-bold rounded-lg transition-colors">
+                    2
+                </button>
+                <button
+                    class="w-8 h-8 flex items-center justify-center border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 text-xs font-bold rounded-lg transition-colors">
+                    3
+                </button>
+                <button
+                    class="w-8 h-8 flex items-center justify-center border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </div>
         </div>
 
     </section>
