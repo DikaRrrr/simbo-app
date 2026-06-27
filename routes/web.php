@@ -60,11 +60,18 @@ Route::middleware('auth:admin')->group(function () {
 
 
 
-Route::middleware('auth:petugas')->group(function () {
-    Route::get('/petugas/dashboard', function () {
-        return view('petugas.dashboard');
-    });
-    Route::post('/petugas/logout', [PetugasController::class, 'logout'])->name('petugas.logout');
+Route::middleware('auth:petugas')->prefix('petugas')->name('petugas.')->group(function () {
+    Route::get('/dashboard', [PetugasController::class, 'dashboard'])->name('dashboard');
+    Route::get('/laporan', [PetugasController::class, 'laporanIndex'])->name('laporan.index');
+
+    Route::get('/berita', [PetugasController::class, 'beritaIndex'])->name('berita.index');
+    Route::get('/berita/create', [PetugasController::class, 'beritaCreate'])->name('berita.create');
+    Route::post('/berita', [PetugasController::class, 'beritaStore'])->name('berita.store');
+    Route::get('/berita/{id}/edit', [PetugasController::class, 'beritaEdit'])->name('berita.edit');
+    Route::put('/berita/{id}', [PetugasController::class, 'beritaUpdate'])->name('berita.update');
+    Route::delete('/berita/{id}', [PetugasController::class, 'beritaDestroy'])->name('berita.destroy');
+
+    Route::post('/logout', [PetugasController::class, 'logout'])->name('logout');
 });
 
 Route::get('/laporan/create', function () {
