@@ -48,10 +48,13 @@ class AdminController extends Controller
         return view('admin.v_laporan.index', compact('laporans'), ['pageTitle' => 'Identifikasi Laporan']);
     }
 
+    // 1. Method untuk menampilkan halaman detail penugasan
     public function detailIdentifikasi($id)
     {
-        $laporan = Laporan::with('masyarakat')->findOrFail($id); // ✅ ganti 'userMasyarakat' → 'masyarakat'
+        // Tambahkan 'fotoLaporan' dan 'kategori' agar datanya terbawa ke View
+        $laporan = Laporan::with(['masyarakat', 'fotoLaporan', 'kategori'])->findOrFail($id);
 
+        // Sesuaikan dengan model petugas kamu
         $petugas = UserPetugas::where('status_akun', 'Aktif')->get();
 
         return view('admin.v_laporan.detail', compact('laporan', 'petugas'));
@@ -62,22 +65,47 @@ class AdminController extends Controller
     {
         $request->validate([
             'petugas_id'    => 'required',
-            'prioritas'     => 'required|in:rendah,sedang,tinggi,Rendah,Sedang,Tinggi', // Sesuaikan
+            'prioritas'     => 'required|in:rendah,sedang,tinggi,Rendah,Sedang,Tinggi',
             'catatan_admin' => 'nullable|string'
         ]);
 
         $laporan = Laporan::findOrFail($id);
 
-        // Update data
+        // Update data laporan
         $laporan->update([
+            'id_admin'          => auth()->id(), // PENTING: Mencatat admin siapa yang menugaskan (Gunakan guard jika perlu, misal auth()->guard('admin')->id())
             'id_petugas'        => $request->petugas_id,
             'status_laporan'    => 'Diproses',
-            'prioritas_laporan' => ucfirst($request->prioritas), // Mengubah jadi kapital di depan (Rendah/Sedang/Tinggi)
+            'prioritas_laporan' => ucfirst(strtolower($request->prioritas)), // Memastikan format selalu: Rendah, Sedang, Tinggi
             'catatan_laporan'   => $request->catatan_admin,
         ]);
 
+        // Pastikan nama route ini sesuai dengan di web.php kamu
         return redirect()->route('identifikasi.index')
             ->with('success', 'Laporan berhasil ditugaskan ke petugas!');
+    }
+
+    public function tolakLaporan(Request $request, $id)
+    {
+        // Validasi agar alasan penolakan wajib diisi
+        $request->validate([
+            'catatan_penolakan' => 'required|string|min:10'
+        ], [
+            'catatan_penolakan.required' => 'Alasan penolakan wajib diisi.',
+            'catatan_penolakan.min' => 'Alasan penolakan minimal berisi 10 karakter.'
+        ]);
+
+        $laporan = Laporan::findOrFail($id);
+
+        // Update status menjadi Ditolak
+        $laporan->update([
+            'id_admin'        => auth()->id(), // Mencatat admin yang menolak
+            'status_laporan'  => 'Ditolak',    // Sesuai dengan ENUM di migration Anda
+            'catatan_laporan' => $request->catatan_penolakan,
+        ]);
+
+        return redirect()->route('identifikasi.index')
+            ->with('success', 'Laporan #' . str_pad($laporan->id_laporan, 4, '0', STR_PAD_LEFT) . ' telah ditolak.');
     }
 
     public function indexPengguna()

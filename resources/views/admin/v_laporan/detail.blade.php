@@ -3,7 +3,8 @@
 @section('title', 'Kirim Penugasan - Admin SIMBO')
 @section('pageTitle', 'Identifikasi Laporan')
 
-<main class="ml-[250px] w-[calc(100%-250px)] bg-dash-secondary min-h-screen font-worksans p-8 pt-24">
+<main class="ml-[250px] w-[calc(100%-250px)] bg-dash-secondary min-h-screen font-worksans p-8 pt-24"
+    x-data="{ showRejectModal: false }">
 
     {{-- Tombol Kembali --}}
     <a href="{{ url('/admin/identifikasi') }}"
@@ -17,10 +18,12 @@
     {{-- Header --}}
     <div class="flex flex-wrap items-center gap-3 mb-8">
         <h2 class="text-3xl font-extrabold font-montserrat text-neutral">Kirim Laporan ke Petugas</h2>
-        <span class="px-3 py-1.5 text-sm font-bold rounded-lg bg-white border border-gray-200 text-gray-500 shadow-sm font-mono">
+        <span
+            class="px-3 py-1.5 text-sm font-bold rounded-lg bg-white border border-gray-200 text-gray-500 shadow-sm font-mono">
             #RPT-{{ str_pad($laporan->id_laporan, 4, '0', STR_PAD_LEFT) }}
         </span>
-        <span class="px-3 py-1.5 text-xs font-bold rounded-full bg-amber-50 border border-amber-200 text-amber-700 uppercase tracking-wide flex items-center gap-1.5">
+        <span
+            class="px-3 py-1.5 text-xs font-bold rounded-full bg-amber-50 border border-amber-200 text-amber-700 uppercase tracking-wide flex items-center gap-1.5">
             <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
             Menunggu Penugasan
         </span>
@@ -31,36 +34,38 @@
 
         {{-- ===== KOLOM KIRI: Detail Laporan ===== --}}
         <div class="space-y-5">
-
-            {{-- Kartu Gambar & Info Utama --}}
             <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
 
-                {{-- Gambar Bukti --}}
-                <div class="relative">
-                    <img src="{{ asset('images/pohon-tumbang.png') }}" alt="Bukti laporan"
-                        class="w-full h-64 object-cover">
-                    {{-- Gradient overlay --}}
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                {{-- Gambar Bukti & Header Dinamis --}}
+                <div class="relative bg-gray-100 min-h-[16rem] flex items-center justify-center">
 
-                    {{-- Badge Kategori --}}
-                    <div class="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur-sm text-indigo-700 text-xs font-bold border border-indigo-200 shadow-sm">
+                    @if ($laporan->fotoLaporan && $laporan->fotoLaporan->file_foto)
+                        <img src="{{ asset('storage/' . $laporan->fotoLaporan->file_foto) }}" alt="Bukti laporan"
+                            class="w-full h-72 object-cover">
+                    @else
+                        <div class="text-gray-400 flex flex-col items-center py-12">
+                            <i class="ph ph-image-broken text-5xl mb-2"></i>
+                            <span class="text-sm font-medium">Tidak ada foto bukti dilampirkan</span>
+                        </div>
+                    @endif
+
+                    {{-- Gradient overlay agar teks tetap terbaca --}}
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+
+                    {{-- Badge Kategori Dinamis --}}
+                    <div
+                        class="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur-sm text-indigo-700 text-xs font-bold border border-indigo-200 shadow-sm">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
                             </path>
                         </svg>
-                        @if ($laporan->id_kategori == 1)
-                            Infrastruktur
-                        @elseif ($laporan->id_kategori == 2)
-                            Lingkungan
-                        @else
-                            Keamanan
-                        @endif
+                        {{ optional($laporan->kategori)->nama_kategori ?? 'Kategori Umum' }}
                     </div>
 
                     {{-- Judul di atas gambar --}}
                     <div class="absolute bottom-0 left-0 right-0 p-5">
-                        <h3 class="text-lg font-bold text-white drop-shadow-md leading-snug">
+                        <h3 class="text-xl font-bold text-white drop-shadow-md leading-snug">
                             {{ $laporan->judul_laporan }}
                         </h3>
                     </div>
@@ -68,7 +73,6 @@
 
                 {{-- Info Detail --}}
                 <div class="p-6 space-y-4">
-
                     {{-- Lokasi --}}
                     <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
                         <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -81,7 +85,8 @@
                             </svg>
                         </div>
                         <div class="min-w-0">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Lokasi Kejadian</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Lokasi
+                                Kejadian</p>
                             <p class="text-sm font-semibold text-neutral">{{ $laporan->lokasi }}</p>
                         </div>
                     </div>
@@ -96,7 +101,8 @@
                             </svg>
                         </div>
                         <div>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Dilaporkan Pada</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Dilaporkan
+                                Pada</p>
                             <p class="text-sm font-semibold text-neutral">
                                 {{ \Carbon\Carbon::parse($laporan->created_at)->translatedFormat('d F Y, H:i') }} WIB
                             </p>
@@ -105,12 +111,13 @@
 
                     {{-- Deskripsi --}}
                     <div>
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">Deskripsi Laporan</p>
-                        <div class="text-sm leading-relaxed text-gray-600 bg-gray-50 border border-gray-200 p-4 rounded-xl">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">Deskripsi Laporan
+                        </p>
+                        <div
+                            class="text-sm leading-relaxed text-gray-600 bg-gray-50 border border-gray-200 p-4 rounded-xl">
                             {{ $laporan->isi_laporan }}
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -118,7 +125,8 @@
             <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-4">Data Pelapor</p>
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold shrink-0 uppercase">
+                    <div
+                        class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold shrink-0 uppercase">
                         {{ substr(optional($laporan->masyarakat)->nama_lengkap ?? 'AN', 0, 2) }}
                     </div>
                     <div>
@@ -129,24 +137,19 @@
                             {{ optional($laporan->masyarakat)->email ?? 'Email tidak tersedia' }}
                         </p>
                     </div>
-                    <span class="ml-auto px-2.5 py-1 text-[10px] font-bold rounded-full bg-blue-50 border border-blue-200 text-blue-700 uppercase">
+                    <span
+                        class="ml-auto px-2.5 py-1 text-[10px] font-bold rounded-full bg-blue-50 border border-blue-200 text-blue-700 uppercase">
                         Masyarakat
                     </span>
                 </div>
             </div>
-
         </div>
-        {{-- ===== END KOLOM KIRI ===== --}}
 
         {{-- ===== KOLOM KANAN: Formulir Penugasan ===== --}}
         <div class="bg-white rounded-2xl border border-gray-200 shadow-sm h-fit overflow-hidden">
-
-            {{-- Garis Aksen Atas --}}
             <div class="h-1.5 w-full bg-primary"></div>
 
             <div class="p-6 md:p-8">
-
-                {{-- Judul Form --}}
                 <div class="mb-6">
                     <h3 class="text-lg font-bold font-montserrat text-neutral flex items-center gap-2">
                         <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,7 +159,8 @@
                         </svg>
                         Formulir Penugasan
                     </h3>
-                    <p class="text-xs text-gray-400 mt-1">Tentukan petugas dan prioritas untuk menangani laporan ini.</p>
+                    <p class="text-xs text-gray-400 mt-1">Tentukan petugas dan prioritas untuk menangani laporan ini.
+                    </p>
                 </div>
 
                 <form action="{{ route('admin.identifikasi.assign', $laporan->id_laporan) }}" method="POST"
@@ -166,10 +170,8 @@
 
                     {{-- Pilih Petugas --}}
                     <div>
-                        <label class="block text-sm font-bold text-neutral mb-2">
-                            Petugas Lapangan
-                            <span class="text-red-500 ml-0.5">*</span>
-                        </label>
+                        <label class="block text-sm font-bold text-neutral mb-2">Petugas Lapangan <span
+                                class="text-red-500 ml-0.5">*</span></label>
                         <div class="relative">
                             <select name="petugas_id" required
                                 class="w-full h-12 appearance-none rounded-xl border border-gray-300 bg-inputBg px-4 text-sm font-medium text-neutral outline-none focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white transition-all cursor-pointer">
@@ -180,56 +182,54 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                            <div
+                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                         d="M19 9l-7 7-7-7"></path>
                                 </svg>
                             </div>
                         </div>
-                        <p class="text-xs text-gray-400 mt-2 flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            Petugas akan menerima notifikasi di dashboard mereka.
-                        </p>
                     </div>
 
-                    {{-- Prioritas Laporan --}}
+                    {{-- Prioritas Laporan (Struktur Radio Button Tailwind Diperbaiki) --}}
                     <div>
-                        <label class="block text-sm font-bold text-neutral mb-3">
-                            Prioritas Laporan
-                            <span class="text-red-500 ml-0.5">*</span>
-                        </label>
+                        <label class="block text-sm font-bold text-neutral mb-3">Prioritas Laporan <span
+                                class="text-red-500 ml-0.5">*</span></label>
                         <div class="grid grid-cols-3 gap-3">
 
                             {{-- Rendah --}}
-                            <label class="cursor-pointer">
-                                <input type="radio" name="prioritas" value="rendah" class="peer sr-only" required>
-                                <div class="flex flex-col items-center gap-2 p-3.5 rounded-xl border-2 border-gray-200 bg-white hover:border-green-300 peer-checked:border-green-500 peer-checked:bg-green-50 transition-all">
+                            <div class="relative">
+                                <input type="radio" name="prioritas" id="p_rendah" value="Rendah"
+                                    class="peer sr-only" required>
+                                <label for="p_rendah"
+                                    class="flex flex-col items-center gap-2 p-3.5 rounded-xl border-2 border-gray-200 bg-white cursor-pointer hover:border-green-300 peer-checked:border-green-500 peer-checked:bg-green-50 transition-all">
                                     <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
                                     <span class="text-xs font-bold text-gray-600">Rendah</span>
-                                </div>
-                            </label>
+                                </label>
+                            </div>
 
                             {{-- Sedang --}}
-                            <label class="cursor-pointer">
-                                <input type="radio" name="prioritas" value="sedang" class="peer sr-only">
-                                <div class="flex flex-col items-center gap-2 p-3.5 rounded-xl border-2 border-gray-200 bg-white hover:border-amber-300 peer-checked:border-amber-500 peer-checked:bg-amber-50 transition-all">
+                            <div class="relative">
+                                <input type="radio" name="prioritas" id="p_sedang" value="Sedang"
+                                    class="peer sr-only">
+                                <label for="p_sedang"
+                                    class="flex flex-col items-center gap-2 p-3.5 rounded-xl border-2 border-gray-200 bg-white cursor-pointer hover:border-amber-300 peer-checked:border-amber-500 peer-checked:bg-amber-50 transition-all">
                                     <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
                                     <span class="text-xs font-bold text-gray-600">Sedang</span>
-                                </div>
-                            </label>
+                                </label>
+                            </div>
 
                             {{-- Tinggi --}}
-                            <label class="cursor-pointer">
-                                <input type="radio" name="prioritas" value="tinggi" class="peer sr-only">
-                                <div class="flex flex-col items-center gap-2 p-3.5 rounded-xl border-2 border-gray-200 bg-white hover:border-red-300 peer-checked:border-red-500 peer-checked:bg-red-50 transition-all">
+                            <div class="relative">
+                                <input type="radio" name="prioritas" id="p_tinggi" value="Tinggi"
+                                    class="peer sr-only">
+                                <label for="p_tinggi"
+                                    class="flex flex-col items-center gap-2 p-3.5 rounded-xl border-2 border-gray-200 bg-white cursor-pointer hover:border-red-300 peer-checked:border-red-500 peer-checked:bg-red-50 transition-all">
                                     <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
                                     <span class="text-xs font-bold text-gray-600">Tinggi</span>
-                                </div>
-                            </label>
+                                </label>
+                            </div>
 
                         </div>
                     </div>
@@ -237,31 +237,86 @@
                     {{-- Catatan Admin --}}
                     <div>
                         <label class="block text-sm font-bold text-neutral mb-2">Catatan dari Admin</label>
-                        <textarea name="catatan_admin" rows="4"
-                            placeholder="Tambahkan instruksi khusus, detail patokan lokasi, atau pesan untuk petugas lapangan..."
+                        <textarea name="catatan_admin" rows="4" placeholder="Tambahkan instruksi khusus untuk petugas lapangan..."
                             class="w-full rounded-xl border border-gray-300 bg-inputBg px-4 py-3 text-sm font-medium text-neutral outline-none focus:border-primary focus:ring-1 focus:ring-primary focus:bg-white transition-all resize-none"></textarea>
                     </div>
 
-                    {{-- Action Buttons --}}
-                    <div class="border-t border-gray-100 pt-6 flex justify-end gap-3">
-                        <a href="{{ url('/admin/identifikasi') }}"
-                            class="px-6 py-3 rounded-xl border border-gray-300 bg-white text-gray-600 text-sm font-bold hover:bg-gray-50 transition-colors shadow-sm">
-                            Batal
-                        </a>
+                    {{-- Tombol Aksi --}}
+                    <div class="border-t border-gray-100 pt-6 flex justify-end gap-2">
+
+                        <button type="button" @click="showRejectModal = true"
+                            class="px-5 py-3 rounded-xl border border-red-200 bg-red-50 text-red-600 text-sm font-bold hover:bg-red-100 transition-colors flex items-center gap-2">
+                            <i class="ph ph-x-circle text-base"></i>
+                            Tolak Laporan
+                        </button>
+
                         <button type="submit"
-                            class="px-6 py-3 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 hover:shadow-md transition-all flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            class="px-5 py-3 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 hover:shadow-md transition-all flex items-center gap-2">
+                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                             </svg>
                             Kirim Tugas
                         </button>
+
                     </div>
 
                 </form>
             </div>
         </div>
-        {{-- ===== END KOLOM KANAN ===== --}}
+    </div>
 
+    <div x-show="showRejectModal" x-cloak
+        class="fixed inset-0 z-[99999] flex items-center justify-center p-4 overflow-x-hidden overflow-y-auto"
+        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100">
+
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" @click="showRejectModal = false"></div>
+
+        <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 space-y-4 transition-all transform"
+            x-show="showRejectModal" x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="scale-95 opacity-0" x-transition:enter-end="scale-100 opacity-100">
+
+            <div class="flex items-center gap-3 text-red-600">
+                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                    <i class="ph ph-warning-octagon text-2xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold font-montserrat text-neutral">Tolak Laporan ini?</h3>
+                    <p class="text-xs text-gray-400">Tindakan ini akan membatalkan proses penugasan.</p>
+                </div>
+            </div>
+
+            <form action="{{ route('admin.identifikasi.tolak', $laporan->id_laporan) }}" method="POST"
+                class="space-y-4">
+                @csrf
+                @method('PUT')
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                        Alasan Penolakan <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="catatan_penolakan" rows="4" required
+                        placeholder="Berikan alasan yang jelas mengapa laporan ini ditolak (misal: Laporan hoaks, lokasi di luar wilayah Bogor, atau informasi kurang lengkap)..."
+                        class="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm font-medium text-neutral outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:bg-white transition-all resize-none"></textarea>
+                    {{-- TAMBAHKAN INI --}}
+                    @error('catatan_penolakan')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" @click="showRejectModal = false"
+                        class="px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-600 text-xs font-bold hover:bg-gray-50 transition-colors shadow-sm">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors shadow-sm flex items-center gap-1.5">
+                        <i class="ph ph-trash text-sm"></i>
+                        Ya, Tolak Laporan
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </main>

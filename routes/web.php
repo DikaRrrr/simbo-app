@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MasyarakatController;
 use App\Http\Controllers\PetugasController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,17 @@ Route::post('/admin/login', [AdminController::class, 'login']);
 Route::get('/petugas/login', [PetugasController::class, 'showLogin'])->name('petugas.login');
 Route::post('/petugas/login', [PetugasController::class, 'login']);
 
+Route::middleware('auth')->group(function () {
+    
+    Route::get('/laporan', [MasyarakatController::class, 'laporanIndex'])->name('laporan.index');
+    Route::post('/laporan/store', [MasyarakatController::class, 'storeLaporan'])->name('laporan.store');
+    Route::get('/beranda', [MasyarakatController::class, 'index'])->name('masyarakat.beranda');
+    Route::get('/aktivitas', [MasyarakatController::class, 'aktivitasIndex'])->name('aktivitas.index');
+    Route::get('/berita', [MasyarakatController::class, 'beritaIndex'])->name('berita.index');
+    Route::get('/notifikasi', [MasyarakatController::class, 'notifikasiIndex'])->name('notifikasi.index');
+    Route::get('/profile', [MasyarakatController::class, 'profileIndex'])->name('profile.index');
+});
+
 // Group route untuk Admin agar aman
 Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/dashboard', function () {
@@ -42,6 +54,7 @@ Route::middleware('auth:admin')->group(function () {
     });
     Route::get('/admin/identifikasi/detail/{id}', [AdminController::class, 'detailIdentifikasi'])->name('admin.identifikasi.detail');
     Route::put('/admin/identifikasi/assign/{id}', [AdminController::class, 'assignPetugas'])->name('admin.identifikasi.assign');
+    Route::put('/admin/identifikasi/{id}/reject', [AdminController::class, 'tolakLaporan'])->name('admin.identifikasi.tolak');
     Route::get('/admin/pengguna', [AdminController::class, 'indexPengguna'])->name('admin.pengguna.index');
     Route::get('/admin/pengguna/tambah', function () {
         return view('admin.v_pengguna.create', ['pageTitle' => 'Tambah Pengguna']);
@@ -52,6 +65,13 @@ Route::middleware('auth:admin')->group(function () {
     Route::put('/admin/pengguna/{role}/{id}', [AdminController::class, 'updatePengguna'])
         ->name('admin.pengguna.update');
     Route::delete('/admin/pengguna/{role}/{id}', [AdminController::class, 'destroyPengguna'])->name('admin.pengguna.destroy');
+
+    Route::get('/admin/arsip-laporan', function () {
+        return view('admin.v_arsip.laporan', ['pageTitle' => 'Arsip Laporan']);
+    });
+    Route::get('/admin/arsip-berita', function () {
+        return view('admin.v_arsip.berita', ['pageTitle' => 'Arsip Berita']);
+    });
 
     // Route untuk memproses form
     Route::post('/admin/pengguna/store', [AdminController::class, 'storePengguna'])->name('admin.pengguna.store');
@@ -73,7 +93,3 @@ Route::middleware('auth:petugas')->prefix('petugas')->name('petugas.')->group(fu
 
     Route::post('/logout', [PetugasController::class, 'logout'])->name('logout');
 });
-
-Route::get('/laporan/create', function () {
-    return view('v_laporan.create');
-})->middleware('auth')->name('laporan.create');

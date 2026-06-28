@@ -49,4 +49,11 @@ class Laporan extends Model
     {
         return $this->belongsTo(UserAdmin::class, 'id_admin', 'id_admin');
     }
+
+    public function fotoLaporan()
+    {
+        // Menggunakan hasOne jika 1 laporan maksimal 1 foto
+        // Menggunakan hasMany jika 1 laporan bisa banyak foto
+        return $this->hasOne(FotoLaporan::class, 'id_laporan', 'id_laporan'); 
+    }
 }
