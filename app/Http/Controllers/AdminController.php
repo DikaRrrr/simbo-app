@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Berita;
+use App\Models\KategoriLaporan;
 use App\Models\Laporan;
 use App\Models\UserAdmin;
 use App\Models\UserMasyarakat;
@@ -9,6 +11,7 @@ use App\Models\UserPetugas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
 
 class AdminController extends Controller
 {
@@ -52,7 +55,7 @@ class AdminController extends Controller
     public function detailIdentifikasi($id)
     {
         // Tambahkan 'fotoLaporan' dan 'kategori' agar datanya terbawa ke View
-        $laporan = Laporan::with(['masyarakat', 'fotoLaporan', 'kategori'])->findOrFail($id);
+        $laporan = Laporan::with(['masyarakat', 'fotoLaporan', 'fotoUtama', 'kategori'])->findOrFail($id);
 
         // Sesuaikan dengan model petugas kamu
         $petugas = UserPetugas::where('status_akun', 'Aktif')->get();
@@ -314,5 +317,145 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menghapus pengguna: ' . $e->getMessage());
         }
+    }
+
+    // 1. Menampilkan Halaman Arsip Berita (dengan Filter & Pagination)
+    public function indexBerita(Request $request)
+    {
+        // Ambil data kategori untuk dropdown filter
+        $kategoriList = KategoriLaporan::all();
+
+        // Query dasar berita
+        $query = Berita::with('kategori')->latest('tanggal_publish');
+
+        // Filter berdasarkan Pencarian (Judul)
+        if ($request->filled('q')) {
+            $query->where('judul_berita', 'like', '%' . $request->q . '%');
+        }
+
+        // Filter berdasarkan Kategori
+        if ($request->filled('kategori')) {
+            $query->where('id_kategori', $request->kategori);
+        }
+
+        // Filter berdasarkan Rentang Waktu (Tanggal Publish)
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('tanggal_publish', [$request->start_date, $request->end_date]);
+        } elseif ($request->filled('start_date')) {
+            $query->whereDate('tanggal_publish', '>=', $request->start_date);
+        } elseif ($request->filled('end_date')) {
+            $query->whereDate('tanggal_publish', '<=', $request->end_date);
+        }
+
+        // Pagination (misal 10 data per halaman), gunakan withQueryString agar filter tidak hilang saat pindah halaman
+        $berita = $query->paginate(10)->withQueryString();
+
+        return view('admin.v_berita.index', compact('berita', 'kategoriList'), ['pageTitle' => 'Manajemen Berita']);
+    }
+
+    public function createBerita()
+    {
+        // Mengambil kategori untuk ditampilkan di dropdown
+        $kategoris = KategoriLaporan::all();
+
+        return view('admin.v_berita.create', compact('kategoris'));
+    }
+
+    public function storeBerita(Request $request)
+    {
+        // Validasi data input
+        $request->validate([
+            'judul_berita'    => 'required|string|max:150',
+            'isi_berita'      => 'required|string',
+            'id_kategori'     => 'required|integer',
+            'gambar_berita'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:8192',
+            'tanggal_publish' => 'nullable|date',
+            'status_arsip'    => 'required|in:aktif,diarsipkan',
+        ]);
+
+        // Proses upload gambar (jika ada)
+        $namaGambar = null;
+        if ($request->hasFile('gambar_berita')) {
+            $file = $request->file('gambar_berita');
+            $namaGambar = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/berita'), $namaGambar);
+        }
+
+        // Simpan ke database
+        Berita::create([
+            'judul_berita'    => $request->judul_berita,
+            'isi_berita'      => $request->isi_berita,
+            'id_kategori'     => $request->id_kategori,
+            'gambar_berita'   => $namaGambar,
+            'tanggal_publish' => $request->tanggal_publish ?? now(),
+            'status_arsip'    => $request->status_arsip,
+            'id_admin'     => auth()->id(), // Aktifkan jika tabel berita memerlukan ID Admin
+        ]);
+
+        return redirect()->route('admin.berita.index')->with('success', 'Berita baru berhasil diterbitkan!');
+    }
+
+    // 2. Menampilkan Form Edit
+    public function editBerita($id)
+    {
+        $berita = Berita::findOrFail($id);
+        $kategoris = KategoriLaporan::all();
+
+        return view('admin.v_berita.edit', compact('berita', 'kategoris'), ['pageTitle' => 'Edit Berita']);
+    }
+
+    // 3. Memproses Update Data
+    public function updateBerita(Request $request, $id)
+    {
+        $request->validate([
+            'judul_berita'    => 'required|string|max:150',
+            'isi_berita'      => 'required|string',
+            'id_kategori'     => 'required|integer',
+            'gambar_berita'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:8192',
+            'tanggal_publish' => 'nullable|date',
+            'status_arsip'    => 'required|in:aktif,diarsipkan',
+        ]);
+
+        $berita = Berita::findOrFail($id);
+        $namaGambar = $berita->gambar_berita;
+
+        // Jika admin mengupload gambar baru
+        if ($request->hasFile('gambar_berita')) {
+            // Hapus gambar lama jika ada
+            if ($berita->gambar_berita && File::exists(public_path('uploads/berita/' . $berita->gambar_berita))) {
+                File::delete(public_path('uploads/berita/' . $berita->gambar_berita));
+            }
+
+            // Upload gambar baru
+            $file = $request->file('gambar_berita');
+            $namaGambar = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/berita'), $namaGambar);
+        }
+
+        $berita->update([
+            'judul_berita'    => $request->judul_berita,
+            'isi_berita'      => $request->isi_berita,
+            'id_kategori'     => $request->id_kategori,
+            'gambar_berita'   => $namaGambar,
+            'tanggal_publish' => $request->tanggal_publish ?? $berita->tanggal_publish,
+            'status_arsip'    => $request->status_arsip,
+        ]);
+
+        return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil diperbarui!');
+    }
+
+    // 4. Memproses Hapus Data
+    public function destroyBerita($id)
+    {
+        $berita = Berita::findOrFail($id);
+
+        // Hapus file gambar fisik
+        if ($berita->gambar_berita && File::exists(public_path('uploads/berita/' . $berita->gambar_berita))) {
+            File::delete(public_path('uploads/berita/' . $berita->gambar_berita));
+        }
+
+        $berita->delete();
+
+        return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus!');
     }
 }

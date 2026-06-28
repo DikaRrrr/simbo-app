@@ -11,7 +11,7 @@
 
 @section('content')
     <div class="max-w-4xl bg-white rounded-2xl border border-tertiary p-8 shadow-sm">
-        <form action="{{ route('petugas.berita.update', $berita->id_berita) }}" method="POST" class="space-y-6">
+        <form action="{{ route('petugas.berita.update', $berita->id_berita) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -25,6 +25,24 @@
                 <label for="isi_berita" class="block text-sm font-bold text-neutral mb-2">Isi Berita</label>
                 <textarea id="isi_berita" name="isi_berita" rows="10" required
                     class="w-full rounded-xl border border-tertiary bg-inputBg px-4 py-3 text-sm outline-none focus:border-primary focus:bg-white resize-none">{{ old('isi_berita', $berita->isi_berita) }}</textarea>
+            </div>
+
+            <div>
+                <label for="gambar_berita" class="block text-sm font-bold text-neutral mb-2">Gambar Berita</label>
+                <div class="rounded-xl border border-dashed border-tertiary bg-inputBg px-4 py-5">
+                    @if ($berita->gambar_berita)
+                        <div class="mb-4 flex items-center gap-4">
+                            <img src="{{ $berita->gambar_url }}" alt="Gambar {{ $berita->judul_berita }}"
+                                class="h-24 w-36 rounded-xl object-cover border border-tertiary bg-white">
+                            <p class="text-xs text-neutral/60">Gambar saat ini. Pilih file baru bila ingin menggantinya.</p>
+                        </div>
+                    @else
+                        <p class="text-xs text-neutral/50 mb-3">Belum ada gambar untuk berita ini.</p>
+                    @endif
+                    <input type="file" id="gambar_berita" name="gambar_berita" accept="image/png,image/jpeg,image/jpg,image/webp"
+                        class="block w-full text-sm text-neutral/70 file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-bold file:text-white hover:file:bg-primary/90">
+                    <p class="text-xs text-neutral/50 mt-2">Format gambar: JPG, JPEG, PNG, atau WEBP. Ukuran maksimal 8 MB.</p>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

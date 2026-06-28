@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('notifikasi', function (Blueprint $table) {
             $table->id('id_notifikasi');
-            $table->unsignedBigInteger('id_laporan');
-            $table->unsignedBigInteger('id_masyarakat');
+            $table->unsignedBigInteger('id_laporan')->nullable();
+            $table->unsignedBigInteger('id_masyarakat')->nullable();
             $table->string('isi_notifikasi');
             $table->boolean('status_baca')->default(false); // 0 = Belum dibaca, 1 = Sudah
             $table->timestamps();

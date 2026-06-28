@@ -10,7 +10,7 @@
     <main id="beranda" class="relative w-full flex-grow flex items-center overflow-hidden">
 
         {{-- Latar Belakang Peta --}}
-        <div class="absolute inset-y-0 right-0 w-full lg:w-2/3 bg-no-repeat bg-right bg-[length:150%_150%] lg:bg-center bg-contain opacity-20 pointer-events-none max-w-0 lg:max-w-full"
+        <div class="absolute inset-y-0 right-0 w-full lg:w-2/3 bg-no-repeat bg-right bg-[length:160%_160%] lg:bg-center bg-contain opacity-20 pointer-events-none max-w-0 lg:max-w-full"
             style="background-image: url('{{ asset('images/peta.png') }}');">
         </div>
 

@@ -39,6 +39,7 @@
                         <th class="px-6 py-4">Prioritas</th>
                         <th class="px-6 py-4">Status</th>
                         <th class="px-6 py-4">Tanggal</th>
+                        <th class="px-6 py-4">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-tertiary">
@@ -74,10 +75,15 @@
                             <td class="px-6 py-4"><span class="{{ $prioritasClass }} text-[10px] font-bold px-3 py-1 rounded-full uppercase">{{ $prioritas }}</span></td>
                             <td class="px-6 py-4"><span class="{{ $statusClass }} text-[10px] font-bold px-3 py-1 rounded-full uppercase">{{ $statusLabel }}</span></td>
                             <td class="px-6 py-4 text-neutral/60">{{ optional($item->tanggal_laporan)->format('d M Y') }}</td>
+                            <td class="px-6 py-4">
+                                <a href="{{ route('petugas.laporan.edit', $item->id_laporan) }}" class="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white hover:bg-primary/90">
+                                    Edit
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-8 text-center text-neutral/50">Data laporan belum tersedia.</td>
+                            <td colspan="9" class="px-6 py-8 text-center text-neutral/50">Data laporan belum tersedia.</td>
                         </tr>
                     @endforelse
                 </tbody>

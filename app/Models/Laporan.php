@@ -54,6 +54,12 @@ class Laporan extends Model
     {
         // Menggunakan hasOne jika 1 laporan maksimal 1 foto
         // Menggunakan hasMany jika 1 laporan bisa banyak foto
-        return $this->hasOne(FotoLaporan::class, 'id_laporan', 'id_laporan'); 
+        return $this->hasMany(FotoLaporan::class, 'id_laporan', 'id_laporan');
+    }
+
+    public function fotoUtama()
+    {
+        return $this->hasOne(FotoLaporan::class, 'id_laporan', 'id_laporan')
+            ->oldestOfMany('id_foto');
     }
 }

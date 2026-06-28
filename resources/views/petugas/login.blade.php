@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login Petugas - SIMBO</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-gold.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-primary min-h-screen flex flex-col font-worksans text-neutral">

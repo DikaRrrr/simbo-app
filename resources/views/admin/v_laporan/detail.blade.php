@@ -39,8 +39,8 @@
                 {{-- Gambar Bukti & Header Dinamis --}}
                 <div class="relative bg-gray-100 min-h-[16rem] flex items-center justify-center">
 
-                    @if ($laporan->fotoLaporan && $laporan->fotoLaporan->file_foto)
-                        <img src="{{ asset('storage/' . $laporan->fotoLaporan->file_foto) }}" alt="Bukti laporan"
+                    @if ($laporan->fotoUtama && $laporan->fotoUtama->file_foto)
+                        <img src="{{ asset('storage/' . $laporan->fotoUtama->file_foto) }}" alt="Bukti laporan"
                             class="w-full h-72 object-cover">
                     @else
                         <div class="text-gray-400 flex flex-col items-center py-12">

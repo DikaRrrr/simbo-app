@@ -50,7 +50,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             
             // Jika berhasil, arahkan ke beranda
-            return view('masyarakat.v_beranda.index')->with('success', 'Berhasil masuk!');
+            return redirect()->route('masyarakat.beranda')->with('success', 'Berhasil masuk!');
         }
 
         // 3. Jika gagal, kembalikan ke halaman login beserta error

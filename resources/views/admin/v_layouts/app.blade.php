@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin - SIMBO</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-green.png') }}">
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -158,14 +160,13 @@
                         Arsip Laporan
                     </a>
 
-                    <a href="{{ url('/admin/arsip-berita') }}"
+                    <a href="{{ route('admin.berita.index') }}"
                         class="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-colors
-        {{ request()->is('admin/arsip-berita*') ? 'bg-primary text-white shadow-md' : 'text-neutral hover:bg-gray-100' }}">
-                        <svg class="w-5 h-5 {{ request()->is('admin/arsip-berita*') ? 'text-white' : 'text-gray-500' }}"
+        {{ request()->is('admin/berita*') ? 'bg-primary text-white shadow-md' : 'text-neutral hover:bg-gray-100' }}">
+                        <svg class="w-5 h-5 {{ request()->is('admin/berita*') ? 'text-white' : 'text-gray-500' }}"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15M9 11l3 3m0 0l3-3m-3 3V8">
-                            </path>
                         </svg>
                         Arsip Berita
                     </a>

@@ -33,12 +33,14 @@ Route::get('/petugas/login', [PetugasController::class, 'showLogin'])->name('pet
 Route::post('/petugas/login', [PetugasController::class, 'login']);
 
 Route::middleware('auth')->group(function () {
-    
+
     Route::get('/laporan', [MasyarakatController::class, 'laporanIndex'])->name('laporan.index');
     Route::post('/laporan/store', [MasyarakatController::class, 'storeLaporan'])->name('laporan.store');
     Route::get('/beranda', [MasyarakatController::class, 'index'])->name('masyarakat.beranda');
     Route::get('/aktivitas', [MasyarakatController::class, 'aktivitasIndex'])->name('aktivitas.index');
+    Route::get('/masyarakat/aktivitas/{id}', [MasyarakatController::class, 'aktivitasDetail'])->name('aktivitas.detail');
     Route::get('/berita', [MasyarakatController::class, 'beritaIndex'])->name('berita.index');
+    Route::get('/berita/{id}', [MasyarakatController::class, 'beritaShow'])->name('berita.show');
     Route::get('/notifikasi', [MasyarakatController::class, 'notifikasiIndex'])->name('notifikasi.index');
     Route::get('/profile', [MasyarakatController::class, 'profileIndex'])->name('profile.index');
 });
@@ -69,9 +71,12 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/arsip-laporan', function () {
         return view('admin.v_arsip.laporan', ['pageTitle' => 'Arsip Laporan']);
     });
-    Route::get('/admin/arsip-berita', function () {
-        return view('admin.v_arsip.berita', ['pageTitle' => 'Arsip Berita']);
-    });
+    Route::get('admin/berita', [AdminController::class, 'indexBerita'])->name('admin.berita.index');
+    Route::get('/admin/berita/create', [AdminController::class, 'createBerita'])->name('admin.berita.create');
+    Route::get('/admin/berita/{id}/edit', [AdminController::class, 'editBerita'])->name('admin.berita.edit');
+    Route::post('/admin/berita', [AdminController::class, 'storeBerita'])->name('admin.berita.store');
+    Route::put('/admin/berita/{id}', [AdminController::class, 'updateBerita'])->name('admin.berita.update');
+    Route::delete('/admin/berita/{id}', [AdminController::class, 'destroyBerita'])->name('admin.berita.destroy');
 
     // Route untuk memproses form
     Route::post('/admin/pengguna/store', [AdminController::class, 'storePengguna'])->name('admin.pengguna.store');
@@ -82,7 +87,10 @@ Route::middleware('auth:admin')->group(function () {
 
 Route::middleware('auth:petugas')->prefix('petugas')->name('petugas.')->group(function () {
     Route::get('/dashboard', [PetugasController::class, 'dashboard'])->name('dashboard');
+
     Route::get('/laporan', [PetugasController::class, 'laporanIndex'])->name('laporan.index');
+    Route::get('/laporan/{id}/edit', [PetugasController::class, 'laporanEdit'])->name('laporan.edit');
+    Route::put('/laporan/{id}', [PetugasController::class, 'laporanUpdate'])->name('laporan.update');
 
     Route::get('/berita', [PetugasController::class, 'beritaIndex'])->name('berita.index');
     Route::get('/berita/create', [PetugasController::class, 'beritaCreate'])->name('berita.create');

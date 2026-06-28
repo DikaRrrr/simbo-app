@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Berita;
 use App\Models\FotoLaporan;
 use App\Models\KategoriLaporan;
 use App\Models\Laporan;
@@ -14,7 +15,36 @@ class MasyarakatController extends Controller
 
     public function index()
     {
-        return view('masyarakat.v_beranda.index', ['pageTitle' => 'Beranda']);
+        $userId = auth()->id();
+
+        // ── Statistik laporan milik user ini ──────────────────────────
+        $totalLaporan    = Laporan::where('id_masyarakat', $userId)->count();
+        $diprosesLaporan = Laporan::where('id_masyarakat', $userId)
+            ->where('status_laporan', 'Diproses')->count();
+        $selesaiLaporan  = Laporan::where('id_masyarakat', $userId)
+            ->where('status_laporan', 'Selesai')->count();
+
+        // ── 5 Aktivitas terbaru berdasarkan laporan user ───────────────
+        $aktivitasTerbaru = Laporan::where('id_masyarakat', $userId)
+            ->with('kategori')
+            ->latest('updated_at')
+            ->take(5)
+            ->get();
+
+        // ── 3 Berita terbaru yang aktif ────────────────────────────────
+        $beritaTerbaru = \App\Models\Berita::with('kategori')
+            ->where('status_arsip', 'aktif') // Pastikan hanya berita aktif
+            ->latest('tanggal_publish')
+            ->take(3) // Misalnya ambil 3 berita terbaru
+            ->get();
+
+        return view('masyarakat.v_beranda.index', compact(
+            'totalLaporan',
+            'diprosesLaporan',
+            'selesaiLaporan',
+            'aktivitasTerbaru',
+            'beritaTerbaru',
+        ));
     }
 
     public function laporanIndex()
@@ -80,14 +110,178 @@ class MasyarakatController extends Controller
         }
     }
 
-    public function aktivitasIndex()
+    public function aktivitasIndex(Request $request)
     {
-        return view('masyarakat.v_aktivitas.index', ['pageTitle' => 'Aktivitas']);
+        $userId = auth()->id();
+
+        // Filter status (opsional dari query string)
+        $statusFilter = $request->query('status');
+
+        $query = Laporan::where('id_masyarakat', $userId)
+            ->with(['kategori', 'fotoUtama'])
+            ->latest('updated_at');
+
+        if ($statusFilter && $statusFilter !== 'semua') {
+            $query->where('status_laporan', ucfirst($statusFilter));
+        }
+
+        $laporan = $query->paginate(10);
+
+        // Hitung jumlah per status untuk tab counter
+        $counter = [
+            'semua'    => Laporan::where('id_masyarakat', $userId)->count(),
+            'menunggu' => Laporan::where('id_masyarakat', $userId)->where('status_laporan', 'Menunggu')->count(),
+            'diproses' => Laporan::where('id_masyarakat', $userId)->where('status_laporan', 'Diproses')->count(),
+            'selesai'  => Laporan::where('id_masyarakat', $userId)->where('status_laporan', 'Selesai')->count(),
+            'ditolak'  => Laporan::where('id_masyarakat', $userId)->where('status_laporan', 'Ditolak')->count(),
+        ];
+
+        return view('masyarakat.v_aktivitas.index', compact('laporan', 'counter', 'statusFilter'));
     }
 
-    public function beritaIndex()
+    public function aktivitasDetail($id)
     {
-        return view('masyarakat.v_berita.index', ['pageTitle' => 'Berita']);
+        $userId = auth()->id();
+
+        // Pastikan laporan ini milik user yang login
+        $laporan = Laporan::where('id_masyarakat', $userId)
+            ->with([
+                'kategori',
+                'fotoLaporan',  // hasMany — semua foto
+                'fotoUtama',    // hasOne  — foto pertama (milik warga)
+                'masyarakat',
+                'petugas',      // relasi ke user_petugas jika ada
+            ])
+            ->findOrFail($id);
+
+        // Pisahkan catatan admin dan catatan petugas
+        $catatanPecah   = explode("\n\n--- Catatan Petugas ---\n", $laporan->catatan_laporan ?? '');
+        $catatanAdmin   = trim($catatanPecah[0] ?? '');
+        $catatanPetugas = trim($catatanPecah[1] ?? '');
+
+        // Foto penyelesaian dari petugas (foto kedua di tabel)
+        $fotoPenyelesaian = $laporan->fotoLaporan->count() > 1
+            ? $laporan->fotoLaporan->last()
+            : null;
+
+        // Timeline history status (jika kamu punya tabel aktivitas/log)
+        // Jika tidak ada tabel khusus, kita simulasikan dari data laporan
+        $timeline = collect([
+            [
+                'status'    => 'Laporan Masuk',
+                'desc'      => 'Laporan Anda berhasil dikirim ke sistem SIMBO.',
+                'waktu'     => $laporan->created_at,
+                'done'      => true,
+                'icon'      => 'ph-paper-plane-right',
+                'color'     => 'bg-neutral',
+            ],
+            [
+                'status'    => 'Ditinjau Admin',
+                'desc'      => !empty($catatanAdmin)
+                    ? $catatanAdmin
+                    : 'Admin sedang meninjau laporan Anda.',
+                'waktu'     => in_array($laporan->status_laporan, ['Diproses', 'Selesai'])
+                    ? $laporan->updated_at
+                    : null,
+                'done'      => in_array($laporan->status_laporan, ['Diproses', 'Selesai', 'Ditolak']),
+                'icon'      => 'ph-shield-check',
+                'color'     => 'bg-blue-500',
+            ],
+            [
+                'status'    => 'Ditangani Petugas',
+                'desc'      => !empty($catatanPetugas)
+                    ? $catatanPetugas
+                    : 'Petugas lapangan sedang menangani masalah.',
+                'waktu'     => $laporan->status_laporan === 'Selesai'
+                    ? $laporan->updated_at
+                    : null,
+                'done'      => $laporan->status_laporan === 'Selesai',
+                'icon'      => 'ph-hard-hat',
+                'color'     => 'bg-amber-500',
+            ],
+            [
+                'status'    => 'Laporan Selesai',
+                'desc'      => 'Masalah telah berhasil ditangani. Terima kasih telah melaporkan!',
+                'waktu'     => $laporan->status_laporan === 'Selesai'
+                    ? $laporan->updated_at
+                    : null,
+                'done'      => $laporan->status_laporan === 'Selesai',
+                'icon'      => 'ph-check-circle',
+                'color'     => 'bg-green-600',
+            ],
+        ]);
+
+        // Jika ditolak, override timeline
+        if ($laporan->status_laporan === 'Ditolak') {
+            $timeline = collect([
+                [
+                    'status' => 'Laporan Masuk',
+                    'desc'   => 'Laporan Anda berhasil dikirim ke sistem SIMBO.',
+                    'waktu'  => $laporan->created_at,
+                    'done'   => true,
+                    'icon'   => 'ph-paper-plane-right',
+                    'color'  => 'bg-neutral',
+                ],
+                [
+                    'status' => 'Ditolak oleh Admin',
+                    'desc'   => !empty($catatanAdmin)
+                        ? $catatanAdmin
+                        : 'Laporan tidak dapat diproses oleh admin.',
+                    'waktu'  => $laporan->updated_at,
+                    'done'   => true,
+                    'icon'   => 'ph-x-circle',
+                    'color'  => 'bg-red-500',
+                ],
+            ]);
+        }
+
+        return view('masyarakat.v_aktivitas.detail', compact(
+            'laporan',
+            'catatanAdmin',
+            'catatanPetugas',
+            'fotoPenyelesaian',
+            'timeline'
+        ));
+    }
+
+
+    public function beritaIndex(Request $request)
+    {
+        // 1. Ambil data kategori untuk tombol filter
+        $kategoris = KategoriLaporan::all();
+
+        // 2. Query dasar: Ambil berita yang aktif dan relasi kategorinya
+        $query = Berita::with('kategori')->where('status_arsip', 'aktif');
+
+        // 3. Fitur Pencarian (Search Bar)
+        if ($request->filled('q')) {
+            $keyword = $request->q;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('judul_berita', 'like', "%{$keyword}%")
+                    ->orWhere('isi_berita', 'like', "%{$keyword}%");
+            });
+        }
+
+        // 4. Fitur Filter Kategori (berdasarkan klik tombol kategori)
+        if ($request->filled('kategori')) {
+            $query->where('id_kategori', $request->kategori);
+        }
+
+        // 5. Eksekusi query dengan urutan terbaru dan pagination (misal 6 per halaman)
+        $beritas = $query->latest('tanggal_publish')->paginate(6)->withQueryString();
+
+        return view('masyarakat.v_berita.index', compact('beritas', 'kategoris'));
+    }
+
+    public function beritaShow($id)
+    {
+        // Mengambil data berita beserta relasi kategorinya
+        // Pastikan statusnya aktif agar berita yang diarsipkan tidak bisa diakses publik
+        $berita = \App\Models\Berita::with('kategori')
+            ->where('status_arsip', 'aktif')
+            ->findOrFail($id);
+
+        return view('masyarakat.v_berita.show', compact('berita'));
     }
 
     public function notifikasiIndex()
