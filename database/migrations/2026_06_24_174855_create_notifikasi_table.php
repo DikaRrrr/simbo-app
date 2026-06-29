@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('notifikasi', function (Blueprint $table) {
             $table->id('id_notifikasi');
             $table->unsignedBigInteger('id_laporan')->nullable();
-            $table->unsignedBigInteger('id_masyarakat')->nullable();
+            $table->unsignedBigInteger('id_masyarakat');
+            $table->enum('tipe_notifikasi', ['laporan', 'pengumuman', 'sistem'])->default('laporan');
+            $table->string('link_target')->nullable();
+            $table->string('judul_notifikasi');
             $table->string('isi_notifikasi');
             $table->boolean('status_baca')->default(false); // 0 = Belum dibaca, 1 = Sudah
             $table->timestamps();

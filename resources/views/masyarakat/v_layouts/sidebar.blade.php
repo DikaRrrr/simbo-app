@@ -70,13 +70,43 @@
 
         <div class="w-full h-px bg-white/10 my-2 sidebar-divider flex-shrink-0"></div>
 
+        @php
+            // Menghitung jumlah notifikasi yang belum dibaca untuk user masyarakat yang sedang login
+            $unreadCount = \App\Models\Notifikasi::where('id_masyarakat', auth()->id())
+                ->where('status_baca', false)
+                ->count();
+        @endphp
+
         {{-- Notifikasi --}}
         <a class="w-full flex items-center justify-start p-2 rounded-xl sidebar-link transition-colors {{ request()->routeIs('notifikasi.*') ? $activeClass : $inactiveClass }}"
             href="{{ route('notifikasi.index') }}">
-            <div class="w-10 h-10 flex items-center justify-center flex-shrink-0">
+
+            {{-- Container Icon (Tambahkan 'relative' di sini) --}}
+            <div class="relative w-10 h-10 flex items-center justify-center flex-shrink-0">
                 <i class="ph ph-bell text-2xl"></i>
+
+                {{-- Indikator Titik Merah dengan Animasi Pulse --}}
+                @if ($unreadCount > 0)
+                    <span class="absolute top-2 right-2 flex h-2.5 w-2.5">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span
+                            class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border-[1.5px] border-white"></span>
+                    </span>
+                @endif
             </div>
-            <span class="sidebar-text text-sm font-medium">Notifikasi</span>
+
+            {{-- Teks Menu & Badge Angka --}}
+            <div class="sidebar-text flex items-center justify-between w-full pr-2">
+                <span class="text-sm font-medium">Notifikasi</span>
+
+                {{-- Opsional: Menampilkan angka jumlah notifikasi --}}
+                @if ($unreadCount > 0)
+                    <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        {{ $unreadCount }}
+                    </span>
+                @endif
+            </div>
         </a>
 
     </nav>

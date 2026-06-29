@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminNotifikasiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MasyarakatController;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\PetugasController;
 use Illuminate\Support\Facades\Route;
 
@@ -81,6 +83,11 @@ Route::middleware('auth:admin')->group(function () {
     // Route untuk memproses form
     Route::post('/admin/pengguna/store', [AdminController::class, 'storePengguna'])->name('admin.pengguna.store');
     Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+
+    Route::get('/admin/notifikasi', [AdminNotifikasiController::class, 'index'])->name('admin.notifikasi.index');
+    Route::get('/admin/notifikasi/create', [AdminNotifikasiController::class, 'create'])->name('admin.notifikasi.create');
+    Route::post('/admin/notifikasi', [AdminNotifikasiController::class, 'store'])->name('admin.notifikasi.store');
+    Route::delete('/admin/notifikasi/{id}', [AdminNotifikasiController::class, 'destroy'])->name('admin.notifikasi.destroy');
 });
 
 
@@ -100,4 +107,10 @@ Route::middleware('auth:petugas')->prefix('petugas')->name('petugas.')->group(fu
     Route::delete('/berita/{id}', [PetugasController::class, 'beritaDestroy'])->name('berita.destroy');
 
     Route::post('/logout', [PetugasController::class, 'logout'])->name('logout');
+});
+
+Route::controller(NotifikasiController::class)->prefix('notifikasi')->name('notifikasi.')->group(function () {
+    Route::get('/', 'index')->name('index');                           // Halaman List Notifikasi
+    Route::get('/{id}/baca', 'markAsRead')->name('read');              // Aksi klik 1 notifikasi
+    Route::post('/baca-semua', 'markAllAsRead')->name('readAll');      // Aksi tandai semua dibaca
 });

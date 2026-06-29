@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin - SIMBO</title>
     <link rel="icon" type="image/png" href="{{ asset('images/logo-green.png') }}">
-    
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -169,6 +169,18 @@
                                 d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15M9 11l3 3m0 0l3-3m-3 3V8">
                         </svg>
                         Arsip Berita
+                    </a>
+
+                    <a href="{{ route('admin.notifikasi.index') }}"
+                        class="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-colors
+    {{ request()->is('admin/notifikasi*') ? 'bg-primary text-white shadow-md' : 'text-neutral hover:bg-gray-100' }}">
+                        <svg class="w-5 h-5 {{ request()->is('admin/notifikasi*') ? 'text-white' : 'text-gray-500' }}"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                            </path>
+                        </svg>
+                        Kelola Notifikasi
                     </a>
 
                 </nav>

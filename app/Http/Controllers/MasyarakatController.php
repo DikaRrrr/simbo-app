@@ -60,7 +60,7 @@ class MasyarakatController extends Controller
         $validated = $request->validate([
             'judul'      => 'required|string|max:150', // Disesuaikan dengan migration (150)
             'kategori'   => 'required|integer',
-            'detail'     => 'required|string',
+            'detail'     => 'required|string|',
             'alamat'     => 'required|string|max:255',
             'patokan'    => 'nullable|string|max:255',
             'foto_bukti' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',

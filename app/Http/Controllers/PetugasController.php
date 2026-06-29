@@ -6,6 +6,7 @@ use App\Models\Berita;
 use App\Models\FotoLaporan;
 use App\Models\KategoriLaporan;
 use App\Models\Laporan;
+use App\Models\Notifikasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -242,6 +243,18 @@ class PetugasController extends Controller
 
             return redirect()->away('https://wa.me/' . $noTelp . '?text=' . urlencode($pesan));
         }
+
+        // --- TRIGGER NOTIFIKASI LAPORAN ---
+        Notifikasi::create([
+            'id_masyarakat'   => $laporan->id_masyarakat,
+            'id_laporan'      => $laporan->id_laporan,
+            'tipe_notifikasi' => 'laporan',
+            'judul_notifikasi'=> 'Status Laporan Diperbarui',
+            'isi_notifikasi'  => "Status laporan Anda tentang '{$laporan->judul_laporan}' telah diubah menjadi: " . strtoupper($request->status_laporan),
+
+            // Arahkan user ke halaman detail laporannya saat notif diklik
+            'link_target'     => route('aktivitas.detail', $laporan->id_laporan),
+        ]);
 
         return redirect()->route('petugas.laporan.index')->with('success', 'Status laporan berhasil diperbarui!');
     }
