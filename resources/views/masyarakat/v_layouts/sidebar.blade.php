@@ -113,7 +113,7 @@
 
     {{-- User Profile --}}
     <div class="mt-auto w-full px-3 pt-3 pb-1 border-t border-white/10 flex-shrink-0 overflow-hidden">
-        <a href="{{ route('profile.index') }}"
+        <a href="{{ route('masyarakat.profile') }}"
             class="w-full flex items-center justify-start p-2 rounded-xl sidebar-link transition-colors hover:bg-white/10 {{ request()->routeIs('profile.index') ? 'bg-white/10' : '' }}">
             <div class="w-10 h-10 flex items-center justify-center flex-shrink-0">
                 <i class="ph ph-user-circle text-4xl text-white"></i>

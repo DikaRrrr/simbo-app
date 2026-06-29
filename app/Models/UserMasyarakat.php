@@ -19,6 +19,7 @@ class UserMasyarakat extends Authenticatable
         'password',
         'alamat',
         'status_akun',
+        'foto_profile'
     ];
 
     protected $hidden = [

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->text('alamat');
+            $table->string('foto_profile')->nullable();
             $table->enum('status_akun', ['Aktif', 'Nonaktif'])->default('Aktif');
             $table->timestamps();
         });

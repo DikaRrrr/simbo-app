@@ -15,6 +15,120 @@ use Illuminate\Support\Facades\File;
 
 class AdminController extends Controller
 {
+    public function dashboard()
+    {
+        // ── Query yang sudah ada sebelumnya ────────────────────────────
+        $totalLaporan    = Laporan::count();
+        $laporanMenunggu = Laporan::where('status_laporan', 'Menunggu')->count();
+        $laporanDiproses = Laporan::where('status_laporan', 'Diproses')->count();
+        $laporanSelesai  = Laporan::where('status_laporan', 'Selesai')->count();
+
+        $aktivitasTerbaru = Laporan::with('kategori')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $laporanAntrean = Laporan::with(['kategori', 'fotoLaporan'])
+            ->where('status_laporan', 'Menunggu')
+            ->latest()
+            ->take(10)
+            ->get();
+
+        // ── TAMBAHKAN 3 QUERY BARU DI SINI ────────────────────────────
+
+        // 1. Rata-rata respon (jam) dari laporan yang sudah ditangani
+        $avgJam = Laporan::whereIn('status_laporan', ['Diproses', 'Selesai'])
+            ->selectRaw('AVG(TIMESTAMPDIFF(HOUR, created_at, updated_at)) as avg_jam')
+            ->value('avg_jam');
+
+        $rataRataRespon = $avgJam
+            ? number_format($avgJam, 1, ',', '.') . ' jam'
+            : '—';
+
+        // 2. Akurasi identifikasi (% laporan tidak ditolak)
+        $totalDiidentifikasi = Laporan::whereIn('status_laporan', ['Diproses', 'Selesai', 'Ditolak'])->count();
+        $totalDitolak        = Laporan::where('status_laporan', 'Ditolak')->count();
+
+        $akurasiIdentifikasi = $totalDiidentifikasi > 0
+            ? number_format((($totalDiidentifikasi - $totalDitolak) / $totalDiidentifikasi) * 100, 1, ',', '.') . '%'
+            : '—';
+
+        // 3. Tingkat pertumbuhan laporan minggu ini vs minggu lalu
+        $mingguIni  = Laporan::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
+        $mingguLalu = Laporan::whereBetween('created_at', [
+            now()->subWeek()->startOfWeek(),
+            now()->subWeek()->endOfWeek(),
+        ])->count();
+
+        if ($mingguLalu > 0) {
+            $pertumbuhan     = (($mingguIni - $mingguLalu) / $mingguLalu) * 100;
+            $pertumbuhanTeks = ($pertumbuhan >= 0 ? '+' : '') . number_format($pertumbuhan, 1, ',', '.') . '%';
+            $pertumbuhanNaik = $pertumbuhan >= 0;
+        } else {
+            $pertumbuhanTeks = $mingguIni > 0 ? '+100%' : '0%';
+            $pertumbuhanNaik = true;
+        }
+
+        // ── Badge 1: Pertumbuhan Total Laporan (minggu ini vs minggu lalu) ──
+        $mingguIni  = Laporan::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
+        $mingguLalu = Laporan::whereBetween('created_at', [
+            now()->subWeek()->startOfWeek(),
+            now()->subWeek()->endOfWeek(),
+        ])->count();
+
+        if ($mingguLalu > 0) {
+            $pct             = (($mingguIni - $mingguLalu) / $mingguLalu) * 100;
+            $badgeTotalTeks  = ($pct >= 0 ? '+' : '') . number_format($pct, 1, ',', '.') . '% minggu lalu';
+            $badgeTotalNaik  = $pct >= 0;
+        } else {
+            $badgeTotalTeks  = $mingguIni > 0 ? '+100% minggu lalu' : '0% minggu lalu';
+            $badgeTotalNaik  = true;
+        }
+
+        // ── Badge 2: Jumlah laporan menunggu prioritas Tinggi ───────────────
+        $menungguTinggi    = Laporan::where('status_laporan', 'Menunggu')
+            ->where('prioritas_laporan', 'Tinggi')
+            ->count();
+        $badgeMenungguTeks = $menungguTinggi > 0
+            ? $menungguTinggi . ' Prioritas Tinggi'
+            : 'Semua Normal';
+        $badgeMenungguRed  = $menungguTinggi > 0;
+
+        // ── Badge 3: Laporan diproses hari ini ──────────────────────────────
+        $diprosesHariIni    = Laporan::where('status_laporan', 'Diproses')
+            ->whereDate('updated_at', today())
+            ->count();
+        $badgeDiprosesTeks  = $diprosesHariIni > 0
+            ? $diprosesHariIni . ' Aktif Hari Ini'
+            : 'Sedang Diproses';
+
+        // ── Badge 4: Persentase penyelesaian (selesai / total) ──────────────
+        $pctSelesai       = $totalLaporan > 0
+            ? number_format(($laporanSelesai / $totalLaporan) * 100, 1, ',', '.')
+            : '0';
+        $badgeSelesaiTeks = $pctSelesai . '% Terselesaikan';
+
+        // ── Return view dengan semua variabel ─────────────────────────
+        return view('admin.dashboard', compact(
+            'totalLaporan',
+            'laporanMenunggu',
+            'laporanDiproses',
+            'laporanSelesai',
+            'aktivitasTerbaru',
+            'laporanAntrean',
+            'rataRataRespon',
+            'akurasiIdentifikasi',
+            'pertumbuhanTeks',
+            'pertumbuhanNaik',
+            'badgeTotalTeks',
+            'badgeTotalNaik',
+            'badgeMenungguTeks',
+            'badgeMenungguRed',
+            'badgeDiprosesTeks',
+            'badgeSelesaiTeks',
+        ));
+    }
+
     public function showLoginForm()
     {
         return view('admin.login');
@@ -109,6 +223,20 @@ class AdminController extends Controller
 
         return redirect()->route('identifikasi.index')
             ->with('success', 'Laporan #' . str_pad($laporan->id_laporan, 4, '0', STR_PAD_LEFT) . ' telah ditolak.');
+    }
+
+    public function destroyLaporan($id)
+    {
+        // Cari data laporan berdasarkan ID
+        $laporan = Laporan::findOrFail($id);
+
+        if ($laporan->foto_laporan && File::exists(public_path('uploads/laporan/' . $laporan->foto_laporan))) {
+            File::delete(public_path('bukti_laporan/' . $laporan->foto_laporan));
+        }
+
+        $laporan->delete();
+
+        return redirect()->back()->with('success', 'Data laporan berhasil dihapus secara permanen.');
     }
 
     public function indexPengguna()
@@ -457,5 +585,73 @@ class AdminController extends Controller
         $berita->delete();
 
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus!');
+    }
+
+    public function indexKategori(Request $request)
+    {
+        $query = KategoriLaporan::latest('id_kategori');
+
+        if ($request->filled('q')) {
+            $query->where('nama_kategori', 'like', '%' . $request->q . '%');
+        }
+
+        $kategoris = $query->paginate(10)->withQueryString();
+
+        return view('admin.v_kategori.index', compact('kategoris'));
+    }
+
+    public function createKategori()
+    {
+        return view('admin.v_kategori.create');
+    }
+
+    public function storeKategori(Request $request)
+    {
+        $request->validate([
+            'nama_kategori' => 'required|string|max:100|unique:kategori_laporan,nama_kategori'
+        ], [
+            'nama_kategori.unique' => 'Nama kategori ini sudah ada, silakan gunakan nama lain.'
+        ]);
+
+        KategoriLaporan::create([
+            'nama_kategori' => $request->nama_kategori
+        ]);
+
+        return redirect()->route('admin.kategori.index')->with('success', 'Kategori baru berhasil ditambahkan!');
+    }
+
+    public function editKategori($id)
+    {
+        $kategori = KategoriLaporan::findOrFail($id);
+        return view('admin.v_kategori.edit', compact('kategori'));
+    }
+
+    public function updateKategori(Request $request, $id)
+    {
+        $kategori = KategoriLaporan::findOrFail($id);
+
+        $request->validate([
+            'nama_kategori' => 'required|string|max:100|unique:kategori_laporan,nama_kategori,' . $id . ',id_kategori'
+        ], [
+            'nama_kategori.unique' => 'Nama kategori ini sudah ada, silakan gunakan nama lain.'
+        ]);
+
+        $kategori->update([
+            'nama_kategori' => $request->nama_kategori
+        ]);
+
+        return redirect()->route('admin.kategori.index')->with('success', 'Kategori berhasil diperbarui!');
+    }
+
+    public function destroyKategori($id)
+    {
+        $kategori = KategoriLaporan::findOrFail($id);
+
+        // Opsional: Cek apakah kategori sedang digunakan sebelum dihapus
+        // Jika ada relasi yang ketat, database mungkin akan menolak penghapusan.
+
+        $kategori->delete();
+
+        return redirect()->route('admin.kategori.index')->with('success', 'Kategori berhasil dihapus!');
     }
 }

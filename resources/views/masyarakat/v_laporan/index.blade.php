@@ -306,52 +306,6 @@
                         </div>
                     </div>
 
-                    {{-- Visibilitas Laporan --}}
-                    <div>
-                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Visibilitas Laporan</p>
-                        <div class="grid grid-cols-2 gap-3">
-
-                            <label class="cursor-pointer">
-                                <input type="radio" x-model="jenis" value="Private" class="sr-only peer">
-                                <div
-                                    class="flex items-start gap-3 p-4 rounded-xl border-2 transition-all cursor-pointer
-                                peer-checked:border-neutral peer-checked:bg-neutral/5
-                                border-gray-200 bg-white hover:border-gray-300">
-                                    <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors"
-                                        :class="jenis === 'Private' ? 'bg-neutral' : 'bg-gray-100'">
-                                        <i class="ph ph-lock text-sm"
-                                            :class="jenis === 'Private' ? 'text-white' : 'text-gray-500'"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-bold text-neutral">Private</p>
-                                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Hanya terlihat oleh Anda
-                                            dan petugas.</p>
-                                    </div>
-                                </div>
-                            </label>
-
-                            <label class="cursor-pointer">
-                                <input type="radio" x-model="jenis" value="Publik" class="sr-only peer">
-                                <div
-                                    class="flex items-start gap-3 p-4 rounded-xl border-2 transition-all cursor-pointer
-                                peer-checked:border-primary peer-checked:bg-primary/5
-                                border-gray-200 bg-white hover:border-gray-300">
-                                    <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors"
-                                        :class="jenis === 'Publik' ? 'bg-primary' : 'bg-gray-100'">
-                                        <i class="ph ph-globe text-sm"
-                                            :class="jenis === 'Publik' ? 'text-white' : 'text-gray-500'"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-bold text-neutral">Publik</p>
-                                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Terlihat oleh semua
-                                            pengguna SIMBO.</p>
-                                    </div>
-                                </div>
-                            </label>
-
-                        </div>
-                    </div>
-
                     {{-- Checkbox Pernyataan --}}
                     <div class="border-t border-gray-100 pt-5">
                         <label class="flex items-start gap-3 cursor-pointer group">

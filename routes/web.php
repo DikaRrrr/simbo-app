@@ -44,14 +44,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/berita', [MasyarakatController::class, 'beritaIndex'])->name('berita.index');
     Route::get('/berita/{id}', [MasyarakatController::class, 'beritaShow'])->name('berita.show');
     Route::get('/notifikasi', [MasyarakatController::class, 'notifikasiIndex'])->name('notifikasi.index');
-    Route::get('/profile', [MasyarakatController::class, 'profileIndex'])->name('profile.index');
+    Route::get('/profile', [MasyarakatController::class, 'profileIndex'])->name('masyarakat.profile');
+    Route::put('/profile', [MasyarakatController::class, 'updateProfile'])->name('masyarakat.profile.update');
 });
 
 // Group route untuk Admin agar aman
 Route::middleware('auth:admin')->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    });
+
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('admin/identifikasi', [AdminController::class, 'identifikasiIndex'])->name('identifikasi.index');
     Route::get('/admin/detail-identifikasi', function () {
         return view('admin.v_laporan.detail', ['pageTitle' => 'Detail Laporan']);
@@ -59,6 +59,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/identifikasi/detail/{id}', [AdminController::class, 'detailIdentifikasi'])->name('admin.identifikasi.detail');
     Route::put('/admin/identifikasi/assign/{id}', [AdminController::class, 'assignPetugas'])->name('admin.identifikasi.assign');
     Route::put('/admin/identifikasi/{id}/reject', [AdminController::class, 'tolakLaporan'])->name('admin.identifikasi.tolak');
+    Route::delete('/admin/laporan/{id}', [AdminController::class, 'destroyLaporan'])->name('admin.laporan.destroy');
     Route::get('/admin/pengguna', [AdminController::class, 'indexPengguna'])->name('admin.pengguna.index');
     Route::get('/admin/pengguna/tambah', function () {
         return view('admin.v_pengguna.create', ['pageTitle' => 'Tambah Pengguna']);
@@ -70,9 +71,6 @@ Route::middleware('auth:admin')->group(function () {
         ->name('admin.pengguna.update');
     Route::delete('/admin/pengguna/{role}/{id}', [AdminController::class, 'destroyPengguna'])->name('admin.pengguna.destroy');
 
-    Route::get('/admin/arsip-laporan', function () {
-        return view('admin.v_arsip.laporan', ['pageTitle' => 'Arsip Laporan']);
-    });
     Route::get('admin/berita', [AdminController::class, 'indexBerita'])->name('admin.berita.index');
     Route::get('/admin/berita/create', [AdminController::class, 'createBerita'])->name('admin.berita.create');
     Route::get('/admin/berita/{id}/edit', [AdminController::class, 'editBerita'])->name('admin.berita.edit');
@@ -88,6 +86,13 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/notifikasi/create', [AdminNotifikasiController::class, 'create'])->name('admin.notifikasi.create');
     Route::post('/admin/notifikasi', [AdminNotifikasiController::class, 'store'])->name('admin.notifikasi.store');
     Route::delete('/admin/notifikasi/{id}', [AdminNotifikasiController::class, 'destroy'])->name('admin.notifikasi.destroy');
+
+    Route::get('/admin/kategori', [AdminController::class, 'indexKategori'])->name('admin.kategori.index');
+    Route::get('/admin/kategori/create', [AdminController::class, 'createKategori'])->name('admin.kategori.create');
+    Route::post('/admin/kategori', [AdminController::class, 'storeKategori'])->name('admin.kategori.store');
+    Route::get('/admin/kategori/{id}/edit', [AdminController::class, 'editKategori'])->name('admin.kategori.edit');
+    Route::put('/admin/kategori/{id}', [AdminController::class, 'updateKategori'])->name('admin.kategori.update');
+    Route::delete('/admin/kategori/{id}', [AdminController::class, 'destroyKategori'])->name('admin.kategori.destroy');
 });
 
 

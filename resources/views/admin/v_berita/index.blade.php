@@ -23,21 +23,25 @@
     @endif
 
     {{-- FORM FILTER --}}
-    <div class="bg-white p-4 rounded-xl border border-gray-200 mb-6 shadow-sm">
+    <div class="bg-white p-5 rounded-xl border border-gray-200 mb-6 shadow-sm">
         <form action="{{ route('admin.berita.index') }}" method="GET" class="flex flex-wrap items-end gap-4 w-full">
 
+            {{-- 1. Search Bar --}}
             <div class="flex-1 min-w-[200px]">
-                <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Cari Judul
-                    Berita</label>
+                <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                    Cari Judul Berita
+                </label>
                 <div class="relative">
                     <input type="text" name="q" value="{{ request('q') }}" placeholder="Masukkan judul..."
                         class="w-full h-10 px-4 bg-gray-50 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:border-primary focus:ring-1 focus:bg-white transition-all" />
                 </div>
             </div>
 
-            <div class="flex-1 min-w-[150px]">
-                <label
-                    class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Kategori</label>
+            {{-- 2. Kategori --}}
+            <div class="flex-1 min-w-[160px]">
+                <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                    Kategori
+                </label>
                 <select name="kategori"
                     class="w-full h-10 px-3 bg-gray-50 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:border-primary focus:ring-1 focus:bg-white transition-all cursor-pointer">
                     <option value="">Semua Kategori</option>
@@ -49,9 +53,11 @@
                 </select>
             </div>
 
-            <div class="flex-1 min-w-[250px]">
-                <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Rentang
-                    Waktu</label>
+            {{-- 3. Rentang Waktu (Membutuhkan ruang lebih lebar) --}}
+            <div class="flex-[1.5] min-w-[280px]">
+                <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                    Rentang Waktu
+                </label>
                 <div class="flex items-center gap-2">
                     <input type="date" name="start_date" value="{{ request('start_date') }}"
                         class="w-full h-10 px-3 bg-gray-50 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:border-primary focus:ring-1 focus:bg-white transition-all" />
@@ -61,7 +67,8 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 mt-2 sm:mt-0">
+            {{-- 4. Tombol Aksi --}}
+            <div class="flex-shrink-0 w-full md:w-auto flex items-center justify-end gap-2 mt-2 md:mt-0">
                 <a href="{{ route('admin.berita.index') }}" title="Reset Filter"
                     class="h-10 px-4 flex items-center justify-center border border-gray-300 bg-white text-gray-600 text-sm font-bold rounded-lg hover:bg-gray-50 transition-colors shadow-sm">
                     Reset
@@ -71,6 +78,7 @@
                     Filter
                 </button>
             </div>
+
         </form>
     </div>
 

@@ -20,7 +20,7 @@
 
     <div class="w-full px-8 pt-8 pb-2">
         <a href="{{ url('/') }}" class="flex items-center gap-3">
-            <img src="{{ asset('images/logo-white.png') }}" alt="Logo SIMBO" class="h-20 w-auto object-contain">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo SIMBO" class="h-20 w-auto object-contain">
         </a>
     </div>
 
