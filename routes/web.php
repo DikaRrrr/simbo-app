@@ -46,8 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/beranda', [MasyarakatController::class, 'index'])->name('masyarakat.beranda');
     Route::get('/aktivitas', [MasyarakatController::class, 'aktivitasIndex'])->name('aktivitas.index');
     Route::get('/masyarakat/aktivitas/{id}', [MasyarakatController::class, 'aktivitasDetail'])->name('aktivitas.detail');
-    Route::get('/berita', [MasyarakatController::class, 'beritaIndex'])->name('berita.index');
-    Route::get('/berita/{id}', [MasyarakatController::class, 'beritaShow'])->name('berita.show');
+    Route::get('/berita', [MasyarakatController::class, 'beritaIndex'])->name('masyarakat.berita.index');
+    Route::get('/berita/{id}', [MasyarakatController::class, 'beritaShow'])->name('masyarakat.berita.show');
     Route::get('/notifikasi', [MasyarakatController::class, 'notifikasiIndex'])->name('notifikasi.index');
     Route::get('/profile', [MasyarakatController::class, 'profileIndex'])->name('masyarakat.profile');
     Route::put('/profile', [MasyarakatController::class, 'updateProfile'])->name('masyarakat.profile.update');
@@ -108,6 +108,7 @@ Route::middleware('auth:petugas')->prefix('petugas')->name('petugas.')->group(fu
     Route::get('/laporan', [PetugasController::class, 'laporanIndex'])->name('laporan.index');
     Route::get('/laporan/{id}/edit', [PetugasController::class, 'laporanEdit'])->name('laporan.edit');
     Route::put('/laporan/{id}', [PetugasController::class, 'laporanUpdate'])->name('laporan.update');
+    Route::get('/petugas/laporan/export-pdf', [PetugasController::class, 'exportPdfLaporan'])->name('laporan.export');
 
     Route::get('/berita', [PetugasController::class, 'beritaIndex'])->name('berita.index');
     Route::get('/berita/create', [PetugasController::class, 'beritaCreate'])->name('berita.create');
@@ -115,6 +116,7 @@ Route::middleware('auth:petugas')->prefix('petugas')->name('petugas.')->group(fu
     Route::get('/berita/{id}/edit', [PetugasController::class, 'beritaEdit'])->name('berita.edit');
     Route::put('/berita/{id}', [PetugasController::class, 'beritaUpdate'])->name('berita.update');
     Route::delete('/berita/{id}', [PetugasController::class, 'beritaDestroy'])->name('berita.destroy');
+    Route::get('/petugas/berita/export-pdf', [PetugasController::class, 'exportPdfBerita'])->name('berita.export');
 
     Route::post('/logout', [PetugasController::class, 'logout'])->name('logout');
 });

@@ -14,6 +14,7 @@ export default {
         neutral: '#0A0A0A',
         formBG: '#F9FAFB',
         inputBg: '#E5E5E5', 
+        midnight: '#0C2529',
       },
       fontFamily: {
         montserrat: ['Montserrat', 'sans-serif'],

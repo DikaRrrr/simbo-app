@@ -61,7 +61,7 @@
 
         {{-- Berita --}}
         <a class="w-full flex items-center justify-start p-2 rounded-xl sidebar-link transition-colors {{ request()->routeIs('berita.*') ? $activeClass : $inactiveClass }}"
-            href="{{ route('berita.index') }}">
+            href="{{ route('masyarakat.berita.index') }}">
             <div class="w-10 h-10 flex items-center justify-center flex-shrink-0">
                 <i class="ph ph-archive text-2xl"></i>
             </div>

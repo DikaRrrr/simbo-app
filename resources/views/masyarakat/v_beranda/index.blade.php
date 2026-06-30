@@ -17,9 +17,9 @@
             <section x-data="{
                 active: 0,
                 images: [
-                    '{{ asset('images/logo-gold.png') }}',
-                    '{{ asset('images/logo-white.png') }}',
-                    '{{ asset('images/logo-green.png') }}'
+                    '{{ asset('images/hero-1.jpeg') }}',
+                    '{{ asset('images/hero-2.jpeg') }}',
+                    '{{ asset('images/hero-3.jpeg') }}'
                 ],
                 init() {
                     setInterval(() => {
@@ -45,9 +45,9 @@
                     <h2 class="text-3xl font-bold text-white mb-2">
                         Halo, {{ auth()->user()->nama_lengkap ?? 'Warga Bogor' }}!
                     </h2>
-                    <h3 class="text-xl font-semibold text-gray-200 mb-4">Selamat Datang di SIMBO</h3>
+                    <h3 class="text-xl font-semibold text-gray-200 mb-4">Selamat Datang di Sistem Informasi Pengaduan Masyarakat Bogor</h3>
                     <p class="text-sm text-gray-300 max-w-2xl leading-relaxed">
-                        Sampaikan aspirasi dan pengaduan Anda dengan mudah. Bersama, kita wujudkan pelayanan
+                        Sampaikan pengaduan Anda dengan mudah. Bersama, kita wujudkan pelayanan
                         publik yang cepat, transparan, dan responsif untuk Kota Bogor.
                     </p>
                 </div>
@@ -203,7 +203,7 @@
                                 class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm flex flex-col group cursor-pointer hover:shadow-md transition-all">
                                 <div class="h-40 bg-gray-100 relative overflow-hidden">
                                     @if ($berita->gambar_berita)
-                                        <img src="{{ asset('uploads/berita/' . $berita->gambar_berita) }}"
+                                        <img src="{{ asset($berita->gambar_berita) }}"
                                             alt="{{ $berita->judul_berita }}"
                                             class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500">
                                     @else

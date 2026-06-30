@@ -4,7 +4,7 @@
 @section('pageTitle', 'Identifikasi Laporan')
 
 <main class="ml-[250px] w-[calc(100%-250px)] bg-dash-secondary min-h-screen font-worksans p-8 pt-24"
-    x-data="{ showRejectModal: false }">
+    x-data="{ showRejectModal: false, showPrioritasGuide: false }">
 
     {{-- Tombol Kembali --}}
     <a href="{{ url('/admin/identifikasi') }}"
@@ -192,10 +192,25 @@
                         </div>
                     </div>
 
-                    {{-- Prioritas Laporan (Struktur Radio Button Tailwind Diperbaiki) --}}
+                    {{-- Prioritas Laporan --}}
                     <div>
-                        <label class="block text-sm font-bold text-neutral mb-3">Prioritas Laporan <span
-                                class="text-red-500 ml-0.5">*</span></label>
+                        <div class="flex items-center gap-1.5 mb-3">
+                            <label class="block text-sm font-bold text-neutral">
+                                Prioritas Laporan <span class="text-red-500 ml-0.5">*</span>
+                            </label>
+
+                            {{-- Tombol Info / Trigger Popup --}}
+                            <button type="button" @click="showPrioritasGuide = true"
+                                class="w-4 h-4 rounded-full bg-gray-200 hover:bg-primary hover:text-white text-gray-500 flex items-center justify-center transition-colors shrink-0"
+                                title="Lihat panduan prioritas">
+                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    stroke-width="3">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </button>
+                        </div>
+
                         <div class="grid grid-cols-3 gap-3">
 
                             {{-- Rendah --}}
@@ -266,57 +281,175 @@
         </div>
     </div>
 
-    <div x-show="showRejectModal" x-cloak
-        class="fixed inset-0 z-[99999] flex items-center justify-center p-4 overflow-x-hidden overflow-y-auto"
+    <div x-show="showPrioritasGuide" x-cloak
+        class="fixed inset-0 z-[99999] flex items-center justify-center p-4 overflow-y-auto"
         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100">
 
-        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" @click="showRejectModal = false"></div>
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" @click="showPrioritasGuide = false"></div>
 
-        <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 space-y-4 transition-all transform"
-            x-show="showRejectModal" x-transition:enter="transition ease-out duration-300"
+        <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
+            x-show="showPrioritasGuide" x-transition:enter="transition ease-out duration-300"
             x-transition:enter-start="scale-95 opacity-0" x-transition:enter-end="scale-100 opacity-100">
 
-            <div class="flex items-center gap-3 text-red-600">
-                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
-                    <i class="ph ph-warning-octagon text-2xl"></i>
+            <div class="flex items-center justify-between p-5 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        <i class="ph ph-info text-lg text-primary"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold font-montserrat text-neutral">Panduan Prioritas Laporan</h3>
+                        <p class="text-xs text-gray-400">Tentukan tingkat urgensi sesuai kondisi di lapangan</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="text-lg font-bold font-montserrat text-neutral">Tolak Laporan ini?</h3>
-                    <p class="text-xs text-gray-400">Tindakan ini akan membatalkan proses penugasan.</p>
-                </div>
+                <button type="button" @click="showPrioritasGuide = false"
+                    class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 transition-colors shrink-0">
+                    <i class="ph ph-x text-lg"></i>
+                </button>
             </div>
 
-            <form action="{{ route('admin.identifikasi.tolak', $laporan->id_laporan) }}" method="POST"
-                class="space-y-4">
-                @csrf
-                @method('PUT')
+            <div class="p-5 space-y-3 max-h-[70vh] overflow-y-auto">
 
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                        Alasan Penolakan <span class="text-red-500">*</span>
-                    </label>
-                    <textarea name="catatan_penolakan" rows="4" required
-                        placeholder="Berikan alasan yang jelas mengapa laporan ini ditolak (misal: Laporan hoaks, lokasi di luar wilayah Bogor, atau informasi kurang lengkap)..."
-                        class="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm font-medium text-neutral outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:bg-white transition-all resize-none"></textarea>
-                    {{-- TAMBAHKAN INI --}}
-                    @error('catatan_penolakan')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
+                <div class="border-2 border-green-200 bg-green-50/50 rounded-xl p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-3 h-3 rounded-full bg-green-400 shrink-0"></span>
+                        <h4 class="text-sm font-bold text-green-700">Rendah</h4>
+                        <span
+                            class="text-[10px] font-semibold text-green-600 bg-green-100 px-2 py-0.5 rounded-full ml-auto">
+                            Target 5–7 hari
+                        </span>
+                    </div>
+                    <ul class="space-y-1.5 text-xs text-gray-600 pl-1">
+                        <li class="flex items-start gap-2">
+                            <i class="ph ph-check text-green-500 mt-0.5 shrink-0"></i>
+                            Tidak mengganggu aktivitas umum secara langsung
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph ph-check text-green-500 mt-0.5 shrink-0"></i>
+                            Kerusakan kecil atau bersifat estetika (cat pudar, coretan, dll)
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph ph-check text-green-500 mt-0.5 shrink-0"></i>
+                            Tidak ada risiko keselamatan bagi warga
+                        </li>
+                    </ul>
                 </div>
 
-                <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" @click="showRejectModal = false"
-                        class="px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-600 text-xs font-bold hover:bg-gray-50 transition-colors shadow-sm">
-                        Batal
-                    </button>
-                    <button type="submit"
-                        class="px-4 py-2.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors shadow-sm flex items-center gap-1.5">
-                        <i class="ph ph-trash text-sm"></i>
-                        Ya, Tolak Laporan
-                    </button>
+                <div class="border-2 border-amber-200 bg-amber-50/50 rounded-xl p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-3 h-3 rounded-full bg-amber-400 shrink-0"></span>
+                        <h4 class="text-sm font-bold text-amber-700">Sedang</h4>
+                        <span
+                            class="text-[10px] font-semibold text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full ml-auto">
+                            Target 2–4 hari
+                        </span>
+                    </div>
+                    <ul class="space-y-1.5 text-xs text-gray-600 pl-1">
+                        <li class="flex items-start gap-2">
+                            <i class="ph ph-check text-amber-500 mt-0.5 shrink-0"></i>
+                            Mengganggu kenyamanan warga di area terbatas
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph ph-check text-amber-500 mt-0.5 shrink-0"></i>
+                            Berpotensi memburuk jika dibiarkan (jalan retak, drainase tersumbat)
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph ph-check text-amber-500 mt-0.5 shrink-0"></i>
+                            Risiko keselamatan rendah, namun perlu penanganan terjadwal
+                        </li>
+                    </ul>
                 </div>
-            </form>
+
+                <div class="border-2 border-red-200 bg-red-50/50 rounded-xl p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-3 h-3 rounded-full bg-red-500 shrink-0"></span>
+                        <h4 class="text-sm font-bold text-red-700">Tinggi</h4>
+                        <span
+                            class="text-[10px] font-semibold text-red-600 bg-red-100 px-2 py-0.5 rounded-full ml-auto">
+                            Target &lt; 24 jam
+                        </span>
+                    </div>
+                    <ul class="space-y-1.5 text-xs text-gray-600 pl-1">
+                        <li class="flex items-start gap-2">
+                            <i class="ph ph-check text-red-500 mt-0.5 shrink-0"></i>
+                            Mengancam keselamatan jiwa atau berisiko kecelakaan
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph ph-check text-red-500 mt-0.5 shrink-0"></i>
+                            Mengganggu fasilitas vital (air, listrik, akses jalan utama)
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph ph-check text-red-500 mt-0.5 shrink-0"></i>
+                            Berdampak pada banyak warga sekaligus
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="px-5 py-4 bg-gray-50 border-t border-gray-100">
+                <button type="button" @click="showPrioritasGuide = false"
+                    class="w-full text-center text-xs font-bold text-white bg-primary hover:bg-primary/90 rounded-xl py-2.5 transition-colors">
+                    Mengerti, Tutup Panduan
+                </button>
+            </div>
+
         </div>
     </div>
+
+</main>
+
+<div x-show="showRejectModal" x-cloak
+    class="fixed inset-0 z-[99999] flex items-center justify-center p-4 overflow-x-hidden overflow-y-auto"
+    x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100">
+
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" @click="showRejectModal = false"></div>
+
+    <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 space-y-4 transition-all transform"
+        x-show="showRejectModal" x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="scale-95 opacity-0" x-transition:enter-end="scale-100 opacity-100">
+
+        <div class="flex items-center gap-3 text-red-600">
+            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                <i class="ph ph-warning-octagon text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold font-montserrat text-neutral">Tolak Laporan ini?</h3>
+                <p class="text-xs text-gray-400">Tindakan ini akan membatalkan proses penugasan.</p>
+            </div>
+        </div>
+
+        <form action="{{ route('admin.identifikasi.tolak', $laporan->id_laporan) }}" method="POST"
+            class="space-y-4">
+            @csrf
+            @method('PUT')
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                    Alasan Penolakan <span class="text-red-500">*</span>
+                </label>
+                <textarea name="catatan_penolakan" rows="4" required
+                    placeholder="Berikan alasan yang jelas mengapa laporan ini ditolak (misal: Laporan hoaks, lokasi di luar wilayah Bogor, atau informasi kurang lengkap)..."
+                    class="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm font-medium text-neutral outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:bg-white transition-all resize-none"></textarea>
+                {{-- TAMBAHKAN INI --}}
+                @error('catatan_penolakan')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button type="button" @click="showRejectModal = false"
+                    class="px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-600 text-xs font-bold hover:bg-gray-50 transition-colors shadow-sm">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="px-4 py-2.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors shadow-sm flex items-center gap-1.5">
+                    <i class="ph ph-trash text-sm"></i>
+                    Ya, Tolak Laporan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 </main>

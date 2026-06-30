@@ -47,7 +47,7 @@
     {{-- Hero Image --}}
     @if ($berita->gambar_berita)
         <div class="w-full h-[300px] md:h-[450px] rounded-2xl overflow-hidden mb-10 shadow-sm">
-            <img src="{{ asset('uploads/berita/' . $berita->gambar_berita) }}" alt="{{ $berita->judul_berita }}"
+            <img src="{{ asset($berita->gambar_berita) }}" alt="{{ $berita->judul_berita }}"
                 class="w-full h-full object-cover">
         </div>
     @endif
@@ -62,7 +62,7 @@
 
     {{-- Tombol Kembali --}}
     <div class="mt-8 border-t border-gray-200 pt-8">
-        <a href="{{ route('berita.index') }}" class="inline-flex items-center gap-2 text-primary font-bold hover:underline">
+        <a href="{{ route('masyarakat.berita.index') }}" class="inline-flex items-center gap-2 text-primary font-bold hover:underline">
             <span class="material-symbols-outlined">arrow_back</span>
             Kembali ke Indeks Berita
         </a>

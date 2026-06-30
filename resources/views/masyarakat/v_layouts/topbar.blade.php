@@ -1,5 +1,5 @@
-<header class="h-20 bg-gray-100 px-8 flex items-center justify-between border-b border-gray-200 z-50">
-    <h1 class="text-2xl font-bold text-gray-800">
+<header class="h-20 bg-primary px-8 flex items-center justify-between border-b border-black/10 shadow-sm z-50">
+    <h1 class="text-2xl font-bold text-white">
         @yield('page_title', 'Dashboard')
     </h1>
 
@@ -9,10 +9,10 @@
             class="flex items-center gap-4 cursor-pointer hover:bg-gray-200/50 p-2 rounded-xl transition-all outline-none">
 
             <div class="text-right text-sm">
-                <p class="font-semibold text-gray-800">
+                <p class="font-semibold text-white">
                     Hai, {{ auth()->user()->nama_lengkap ?? 'Pengguna' }}
                 </p>
-                <p class="text-gray-500 text-xs">
+                <p class="text-gray-300 text-xs">
                     {{ auth()->user()->email }}
                 </p>
             </div>

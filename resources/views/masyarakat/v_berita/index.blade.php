@@ -63,7 +63,7 @@
                     class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col group">
                     <div class="h-52 relative overflow-hidden bg-gray-100">
                         @if ($item->gambar_berita)
-                            <img src="{{ asset('uploads/berita/' . $item->gambar_berita) }}" alt="{{ $item->judul_berita }}"
+                            <img src="{{ asset($item->gambar_berita) }}" alt="{{ $item->judul_berita }}"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out" />
                         @else
                             <div class="w-full h-full flex items-center justify-center text-gray-400">
@@ -99,7 +99,7 @@
                         <div class="mt-auto pt-4 flex items-center justify-between border-t border-gray-100">
 
                             {{-- Link Diaktifkan --}}
-                            <a href="{{ route('berita.show', $item->id_berita) }}"
+                            <a href="{{ route('masyarakat.berita.show', $item->id_berita) }}"
                                 class="flex items-center gap-1 text-primary font-bold text-sm hover:underline group-hover:translate-x-1 transition-transform">
                                 Baca Selengkapnya
                                 <span class="material-symbols-outlined text-sm">arrow_forward</span>

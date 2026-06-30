@@ -7,6 +7,7 @@ use App\Models\FotoLaporan;
 use App\Models\KategoriLaporan;
 use App\Models\Laporan;
 use App\Models\Notifikasi;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -249,7 +250,7 @@ class PetugasController extends Controller
             'id_masyarakat'   => $laporan->id_masyarakat,
             'id_laporan'      => $laporan->id_laporan,
             'tipe_notifikasi' => 'laporan',
-            'judul_notifikasi'=> 'Status Laporan Diperbarui',
+            'judul_notifikasi' => 'Status Laporan Diperbarui',
             'isi_notifikasi'  => "Status laporan Anda tentang '{$laporan->judul_laporan}' telah diubah menjadi: " . strtoupper($request->status_laporan),
 
             // Arahkan user ke halaman detail laporannya saat notif diklik
@@ -257,6 +258,30 @@ class PetugasController extends Controller
         ]);
 
         return redirect()->route('petugas.laporan.index')->with('success', 'Status laporan berhasil diperbarui!');
+    }
+
+
+    public function exportPdfLaporan(Request $request)
+    {
+        // Ambil query data yang sama dengan fungsi index() Anda
+        $query = Laporan::with(['masyarakat', 'kategori']);
+
+        // Terapkan filter yang sama (Pencarian & Status)
+        if ($request->filled('q')) {
+            $query->where('judul_laporan', 'like', '%' . $request->q . '%');
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status_laporan', $request->status);
+        }
+
+        $laporan = $query->latest()->get(); // Tidak pakai paginate karena untuk PDF kita butuh semua data hasil filter
+
+        // Render ke PDF (Buat file view baru khusus untuk cetak PDF)
+        $pdf = Pdf::loadView('petugas.v_laporan.pdf', compact('laporan'));
+
+        // Download file dengan nama dinamis
+        return $pdf->stream('Laporan-Masyarakat-' . date('Y-m-d') . '.pdf');
     }
 
     public function beritaIndex(Request $request)
@@ -359,6 +384,33 @@ class PetugasController extends Controller
         $berita->delete();
 
         return redirect()->route('petugas.berita.index')->with('success', 'Berita berhasil dihapus.');
+    }
+
+    public function exportPdfBerita(Request $request)
+    {
+        // 1. Ambil relasi (sesuaikan jika nama relasi kategori Anda berbeda)
+        $query = Berita::with(['kategori']);
+
+        // 2. Terapkan filter pencarian yang sama dengan fungsi index()
+        if ($request->filled('q')) {
+            $query->where('judul_berita', 'like', '%' . $request->q . '%');
+        }
+
+        // 3. Terapkan filter status
+        if ($request->filled('status')) {
+            $query->where('status_arsip', $request->status);
+        }
+
+        // 4. (Opsional) Jika hanya ingin mengekspor berita milik petugas yang login
+        // $query->where('id_petugas', Auth::guard('petugas')->id());
+
+        // 5. Ambil semua data hasil filter
+        $berita = $query->orderBy('tanggal_publish', 'desc')->get();
+
+        // 6. Generate PDF
+        $pdf = Pdf::loadView('petugas.v_berita.pdf', compact('berita'));
+
+        return $pdf->stream('Rekap-Berita-SIMBO-' . date('Y-m-d') . '.pdf');
     }
 
     private function findBeritaPetugas(int $id): Berita

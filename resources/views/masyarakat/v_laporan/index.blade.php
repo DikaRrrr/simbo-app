@@ -104,10 +104,6 @@
                                     <option value="{{ $kat->id_kategori }}">{{ $kat->nama_kategori }}</option>
                                 @endforeach
                             </select>
-                            <div
-                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                                <i class="ph ph-caret-down"></i>
-                            </div>
                         </div>
                         <span x-show="errors.kategori" class="text-xs text-red-500 font-bold mt-1.5 block"
                             x-text="errors.kategori"></span>
