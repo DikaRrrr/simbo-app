@@ -14,7 +14,11 @@
 
 
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <style>[x-cloak] { display: none !important; }</style>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
     <script>
         tailwind.config = {
             theme: {
@@ -91,6 +95,8 @@
         </div>
 
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         const sidebar = document.getElementById('sidebar');

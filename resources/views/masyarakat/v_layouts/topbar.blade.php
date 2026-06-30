@@ -7,7 +7,7 @@
 
         <button @click="open = !open" @click.away="open = false"
             class="flex items-center gap-4 cursor-pointer hover:bg-gray-200/50 p-2 rounded-xl transition-all outline-none">
-            
+
             <div class="text-right text-sm">
                 <p class="font-semibold text-gray-800">
                     Hai, {{ auth()->user()->nama_lengkap ?? 'Pengguna' }}
@@ -16,9 +16,18 @@
                     {{ auth()->user()->email }}
                 </p>
             </div>
-            
-            <div class="w-10 h-10 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center text-gray-500 shadow-sm">
-                <i class="ph ph-user text-xl"></i>
+
+            {{-- Container Foto Profil --}}
+            <div
+                class="w-10 h-10 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center text-gray-500 shadow-sm overflow-hidden">
+                @if (auth()->user()->foto_profile)
+                    {{-- Jika ada foto di database --}}
+                    <img src="{{ asset('storage/' . auth()->user()->foto_profile) }}" alt="Foto Profil"
+                        class="w-full h-full object-cover">
+                @else
+                    {{-- Jika foto belum ada, tampilkan ikon --}}
+                    <i class="ph ph-user text-xl"></i>
+                @endif
             </div>
         </button>
 

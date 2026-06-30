@@ -69,17 +69,17 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
                 <div
                     class="bg-tertiary aspect-square rounded-[2rem] overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 shadow-lg group relative">
-                    <img src="logo.png" alt="Dokumentasi 1"
+                    <img src="{{ asset('images/logo-gold.png') }}" alt="Dokumentasi 1"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 </div>
                 <div
                     class="bg-tertiary aspect-square rounded-[2rem] overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 shadow-lg group relative">
-                    <img src="logo.png" alt="Dokumentasi 2"
+                    <img src="{{ asset('images/logo-white.png') }}" alt="Dokumentasi 2"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 </div>
                 <div
                     class="bg-tertiary aspect-square rounded-[2rem] overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 shadow-lg group relative">
-                    <img src="logo.png" alt="Dokumentasi 3"
+                    <img src="{{ asset('images/logo-green.png') }}" alt="Dokumentasi 3"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 </div>
             </div>

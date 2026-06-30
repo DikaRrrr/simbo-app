@@ -4,20 +4,30 @@
 @section('page_title', 'Profile Pengguna')
 
 @section('content')
-    <main class="flex-1 md:ml-[92px] pb-24">
+    <main class="flex-1 md:ml-[92px] pb-24 bg-gray-50 min-h-screen">
 
-        <div class="max-w-[980px] mx-auto px-4 sm:px-6 py-6 md:py-8">
+        <div class="max-w-[980px] mx-auto px-4 sm:px-6 py-8 md:py-10">
             @if (session('success'))
                 <div
-                    class="mb-5 rounded-2xl bg-green-100 border border-green-300 text-green-800 px-5 py-3 text-sm font-semibold">
+                    class="mb-6 rounded-2xl bg-green-50 border border-green-200 text-green-700 px-5 py-4 text-sm font-semibold flex items-center gap-3 shadow-sm">
+                    <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
                     {{ session('success') }}
                 </div>
             @endif
 
             @if ($errors->any())
-                <div class="mb-5 rounded-2xl bg-red-100 border border-red-300 text-red-800 px-5 py-3 text-sm">
-                    <p class="font-bold mb-1">Periksa kembali data profil.</p>
-                    <ul class="list-disc ml-5 space-y-1">
+                <div class="mb-6 rounded-2xl bg-red-50 border border-red-200 text-red-700 px-5 py-4 text-sm shadow-sm">
+                    <div class="flex items-center gap-2 mb-2 font-bold">
+                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Periksa kembali data profil:
+                    </div>
+                    <ul class="list-disc ml-7 space-y-1 text-red-600">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -26,21 +36,22 @@
             @endif
 
             <form action="{{ route('masyarakat.profile.update') }}" method="POST" enctype="multipart/form-data"
-                id="profileForm" class="space-y-3">
+                id="profileForm" class="space-y-6">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="remove_photo" id="remove_photo" value="0">
 
+                {{-- Card 1: Header Profile --}}
                 <section
-                    class="bg-[#c9c9c9] rounded-2xl p-5 md:p-7 flex flex-col md:flex-row md:items-center gap-6 md:gap-8 shadow-sm">
+                    class="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-6 md:gap-8 shadow-sm">
                     <div class="relative shrink-0 mx-auto md:mx-0">
-                        <div class="w-28 h-28 rounded-full border-[7px] border-white overflow-hidden bg-[#eeeeee] flex items-center justify-center"
+                        <div class="w-32 h-32 rounded-full border-[6px] border-gray-50 shadow-inner overflow-hidden bg-gray-100 flex items-center justify-center relative group"
                             id="photoPreviewBox">
                             @if ($user->foto_profile)
                                 <img src="{{ asset('storage/' . $user->foto_profile) }}" alt="Foto profil" id="photoPreview"
                                     class="w-full h-full object-cover">
                             @else
-                                <svg id="photoPlaceholder" class="w-20 h-20 text-white" fill="currentColor"
+                                <svg id="photoPlaceholder" class="w-16 h-16 text-gray-300" fill="currentColor"
                                     viewBox="0 0 24 24">
                                     <path
                                         d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4Zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4Z" />
@@ -50,129 +61,181 @@
                     </div>
 
                     <div class="flex-1 text-center md:text-left">
-                        <h2 class="font-montserrat text-lg font-extrabold mb-5">
-                            {{ old('nama_lengkap', $user->nama_lengkap) ?: 'Nama Pengguna' }}</h2>
+                        <h2 class="font-montserrat text-2xl font-black text-gray-900 mb-4 tracking-tight">
+                            {{ old('nama_lengkap', $user->nama_lengkap) ?: 'Nama Pengguna' }}
+                        </h2>
                         <div class="flex flex-wrap justify-center md:justify-start items-center gap-3">
                             <button type="button" id="changePhotoBtn"
-                                class="inline-flex items-center justify-center bg-[#eeeeee] hover:bg-white px-6 py-2.5 rounded-full text-sm font-bold cursor-pointer transition">
+                                class="inline-flex items-center justify-center bg-primary/10 text-primary hover:bg-primary/20 px-6 py-2.5 rounded-full text-sm font-bold cursor-pointer transition-colors">
                                 Ubah Foto
                             </button>
                             <input id="foto_profile" type="file" name="foto_profile" accept="image/jpeg,image/png"
                                 class="hidden">
                             <button type="button" id="removePhotoBtn"
-                                class="inline-flex items-center justify-center bg-[#eeeeee] hover:bg-white px-8 py-2.5 rounded-full text-sm font-bold transition">
+                                class="inline-flex items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 px-6 py-2.5 rounded-full text-sm font-bold transition-colors">
                                 Hapus
                             </button>
                         </div>
-                        <p class="text-xs font-semibold mt-3">Format yang didukung: JPG, PNG. Maksimal ukuran file 2MB.</p>
+                        <p class="text-xs font-medium text-gray-400 mt-3">Format: JPG, PNG. Maksimal 2MB.</p>
                     </div>
                 </section>
 
-                <section class="bg-[#c9c9c9] rounded-2xl p-5 md:p-7 shadow-sm">
-                    <h2 class="font-montserrat text-lg font-extrabold text-center mb-6">Informasi Pribadi</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4">
+                {{-- Card 2: Informasi Pribadi --}}
+                <section class="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 shadow-sm">
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+                        <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                        <h2 class="font-montserrat text-lg font-bold text-gray-900">Informasi Pribadi</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
                         <div>
-                            <label for="nama_lengkap" class="block text-xs font-medium mb-2">Nama Lengkap</label>
+                            <label for="nama_lengkap"
+                                class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Nama
+                                Lengkap</label>
                             <input id="nama_lengkap" name="nama_lengkap" type="text"
                                 value="{{ old('nama_lengkap', $user->nama_lengkap) }}"
-                                class="w-full h-10 rounded-full bg-[#e4e4e4] px-5 text-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-[#142C14]/30">
+                                class="w-full h-11 rounded-xl bg-gray-50 px-4 text-sm font-medium text-gray-900 border border-gray-200 focus:bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
                         </div>
                         <div>
-                            <label for="email" class="block text-xs font-medium mb-2">Email</label>
+                            <label for="email"
+                                class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Email</label>
                             <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}"
-                                class="w-full h-10 rounded-full bg-[#e4e4e4] px-5 text-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-[#142C14]/30">
+                                class="w-full h-11 rounded-xl bg-gray-50 px-4 text-sm font-medium text-gray-900 border border-gray-200 focus:bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
                         </div>
                         <div>
-                            <label for="no_hp" class="block text-xs font-medium mb-2">Nomor Telepon</label>
+                            <label for="no_hp"
+                                class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Nomor
+                                Telepon</label>
                             <input id="no_hp" name="no_hp" type="text" value="{{ old('no_hp', $user->no_hp) }}"
-                                class="w-full h-10 rounded-full bg-[#e4e4e4] px-5 text-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-[#142C14]/30">
+                                class="w-full h-11 rounded-xl bg-gray-50 px-4 text-sm font-medium text-gray-900 border border-gray-200 focus:bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
                         </div>
                         <div>
-                            <label for="nik" class="block text-xs font-medium mb-2">NIK</label>
+                            <label for="nik"
+                                class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">NIK</label>
                             <input id="nik" name="nik" type="text" value="{{ old('nik', $user->nik) }}"
-                                class="w-full h-10 rounded-full bg-[#e4e4e4] px-5 text-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-[#142C14]/30">
+                                class="w-full h-11 rounded-xl bg-gray-50 px-4 text-sm font-medium text-gray-900 border border-gray-200 focus:bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
                         </div>
                     </div>
                 </section>
 
-                <section class="bg-[#c9c9c9] rounded-2xl p-5 md:p-7 shadow-sm">
-                    <h2 class="font-montserrat text-lg font-extrabold text-center mb-6">Detail Alamat</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4">
+                {{-- Card 3: Detail Alamat --}}
+                <section class="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 shadow-sm">
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+                        <div class="w-10 h-10 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                        <h2 class="font-montserrat text-lg font-bold text-gray-900">Detail Alamat</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
                         <div class="md:col-span-2">
-                            <label for="alamat" class="block text-xs font-medium mb-2">Alamat</label>
-                            <textarea id="alamat" name="alamat" rows="2"
-                                class="w-full rounded-2xl bg-[#e4e4e4] px-5 py-3 text-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-[#142C14]/30 resize-none">{{ old('alamat', $user->alamat) }}</textarea>
+                            <label for="alamat"
+                                class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Alamat Tempat
+                                Tinggal</label>
+                            <textarea id="alamat" name="alamat" rows="3"
+                                class="w-full rounded-xl bg-gray-50 px-4 py-3 text-sm font-medium text-gray-900 border border-gray-200 focus:bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none transition-all">{{ old('alamat', $user->alamat) }}</textarea>
                         </div>
                     </div>
                 </section>
 
-                <section class="bg-[#c9c9c9] rounded-2xl p-5 md:p-7 shadow-sm">
-                    <h2 class="font-montserrat text-lg font-extrabold text-center mb-6">Keamanan Akun</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4">
+                {{-- Card 4: Keamanan Akun --}}
+                <section class="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 shadow-sm">
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+                        <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h2 class="font-montserrat text-lg font-bold text-gray-900">Keamanan Akun</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
                         <div class="md:col-span-2">
-                            <label for="password_saat_ini" class="block text-xs font-medium mb-2">Kata Sandi Saat
+                            <label for="password_saat_ini"
+                                class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Kata Sandi Saat
                                 Ini</label>
                             <input id="password_saat_ini" name="password_saat_ini" type="password"
                                 autocomplete="current-password"
-                                class="w-full h-10 rounded-full bg-[#e4e4e4] px-5 text-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-[#142C14]/30">
+                                placeholder="Biarkan kosong jika tidak ingin mengubah sandi"
+                                class="w-full h-11 rounded-xl bg-gray-50 px-4 text-sm font-medium text-gray-900 border border-gray-200 focus:bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
                         </div>
                         <div>
-                            <label for="password_baru" class="block text-xs font-medium mb-2">Kata Sandi Baru</label>
+                            <label for="password_baru"
+                                class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Kata Sandi
+                                Baru</label>
                             <input id="password_baru" name="password_baru" type="password" autocomplete="new-password"
-                                class="w-full h-10 rounded-full bg-[#e4e4e4] px-5 text-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-[#142C14]/30">
+                                class="w-full h-11 rounded-xl bg-gray-50 px-4 text-sm font-medium text-gray-900 border border-gray-200 focus:bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
                         </div>
                         <div>
-                            <label for="password_baru_confirmation" class="block text-xs font-medium mb-2">Konfirmasi Kata
+                            <label for="password_baru_confirmation"
+                                class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Konfirmasi Kata
                                 Sandi Baru</label>
                             <input id="password_baru_confirmation" name="password_baru_confirmation" type="password"
                                 autocomplete="new-password"
-                                class="w-full h-10 rounded-full bg-[#e4e4e4] px-5 text-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-[#142C14]/30">
+                                class="w-full h-11 rounded-xl bg-gray-50 px-4 text-sm font-medium text-gray-900 border border-gray-200 focus:bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
                         </div>
                     </div>
                 </section>
 
-                <div class="flex justify-end items-center gap-4 pt-2">
+                <div class="flex justify-end items-center gap-4 pt-4">
                     <a href="{{ url('/') }}"
-                        class="bg-[#dddddd] hover:bg-[#eeeeee] text-[#444] px-8 py-3 rounded-xl text-xs font-semibold transition">Batalkan</a>
+                        class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-8 py-3.5 rounded-xl text-sm font-bold transition-colors">
+                        Batalkan
+                    </a>
                     <button type="submit"
-                        class="bg-[#eeeeee] hover:bg-white text-[#222] px-8 py-3 rounded-xl text-xs font-semibold shadow-sm transition">Simpan
-                        Perubahan</button>
+                        class="bg-primary hover:bg-primary/90 text-white px-8 py-3.5 rounded-xl text-sm font-bold shadow-sm shadow-primary/30 transition-all transform hover:-translate-y-0.5">
+                        Simpan Perubahan
+                    </button>
                 </div>
             </form>
         </div>
     </main>
-    </div>
 
-    <div id="confirmModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/40 px-4">
-        <div class="w-full max-w-md rounded-3xl bg-white shadow-2xl overflow-hidden">
-            <div class="bg-[#c9c9c9] px-6 py-5 text-center">
-                <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#eeeeee] text-[#222]">
-                    <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    {{-- Modal Konfirmasi yang Disempurnakan --}}
+    <div id="confirmModal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900/60 backdrop-blur-sm px-4 transition-opacity">
+        <div class="w-full max-w-md rounded-3xl bg-white shadow-2xl overflow-hidden transform transition-all scale-100">
+            <div class="px-6 pt-8 pb-5 text-center">
+                <div
+                    class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 9v4m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
                     </svg>
                 </div>
-                <h3 id="confirmTitle" class="font-montserrat text-xl font-extrabold text-[#222]">Konfirmasi</h3>
+                <h3 id="confirmTitle" class="font-montserrat text-xl font-black text-gray-900 tracking-tight mb-2">
+                    Konfirmasi</h3>
+                <p id="confirmMessage" class="text-sm font-medium leading-relaxed text-gray-500 px-2"></p>
             </div>
 
-            <div class="px-6 py-5 text-center">
-                <p id="confirmMessage" class="text-sm font-medium leading-relaxed text-[#444]"></p>
-                <div class="mt-6 flex flex-col-reverse sm:flex-row justify-center gap-3">
-                    <button type="button" id="confirmCancelBtn"
-                        class="rounded-xl bg-[#dddddd] px-6 py-3 text-sm font-bold text-[#444] hover:bg-[#d2d2d2] transition">
-                        Batal
-                    </button>
-                    <button type="button" id="confirmOkBtn"
-                        class="rounded-xl bg-[#142C14] px-6 py-3 text-sm font-bold text-white hover:bg-[#1f3f1f] transition">
-                        Ya, Lanjutkan
-                    </button>
-                </div>
+            <div
+                class="bg-gray-50 px-6 py-5 flex flex-col-reverse sm:flex-row justify-center gap-3 border-t border-gray-100">
+                <button type="button" id="confirmCancelBtn"
+                    class="w-full sm:w-auto rounded-xl bg-white border border-gray-200 px-6 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors">
+                    Batal
+                </button>
+                <button type="button" id="confirmOkBtn"
+                    class="w-full sm:w-auto rounded-xl bg-primary px-6 py-3 text-sm font-bold text-white hover:bg-primary/90 shadow-sm shadow-primary/30 transition-colors">
+                    Ya, Lanjutkan
+                </button>
             </div>
         </div>
     </div>
 
-
+    {{-- (Script JavaScript Anda tetap sama persis, tidak perlu diubah) --}}
     <script>
+        // ... Script konfirmasi yang sudah Anda buat sebelumnya ...
         const fotoInput = document.getElementById('foto_profile');
         const removeInput = document.getElementById('remove_photo');
         const removeBtn = document.getElementById('removePhotoBtn');
@@ -189,7 +252,7 @@
         let formConfirmed = false;
 
         const placeholderIcon =
-            `<svg class="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4Zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4Z"/></svg>`;
+            `<svg class="w-16 h-16 text-gray-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4Zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4Z"/></svg>`;
 
         function openConfirm(title, message, okText, action) {
             confirmTitle.textContent = title;
