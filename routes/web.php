@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminNotifikasiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MasyarakatController;
 use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\PetugasController;
@@ -11,6 +12,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/', [HomeController::class, 'index'])->name('home');
+// Berita publik
+Route::get('/berita-tamu', [HomeController::class, 'indexBerita'])->name('berita.index');
+Route::get('/berita-tamu/{id}', [HomeController::class, 'showBerita'])->name('berita.show');
 
 // Jalur Login
 Route::get('/login', function () {

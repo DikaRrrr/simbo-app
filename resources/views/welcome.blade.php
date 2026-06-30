@@ -10,7 +10,7 @@
     <main id="beranda" class="relative w-full flex-grow flex items-center overflow-hidden">
 
         {{-- Latar Belakang Peta --}}
-        <div class="absolute inset-y-0 right-0 w-full lg:w-2/3 bg-no-repeat bg-right bg-[length:160%_160%] lg:bg-center bg-contain opacity-20 pointer-events-none max-w-0 lg:max-w-full"
+        <div class="absolute inset-y-0 right-0 w-full lg:w-2/3 bg-no-repeat bg-right bg-[length:170%_160%] lg:bg-center bg-contain opacity-20 pointer-events-none max-w-0 lg:max-w-full"
             style="background-image: url('{{ asset('images/peta.png') }}');">
         </div>
 
@@ -31,7 +31,7 @@
             {{-- Logo & Tombol Kanan --}}
             <div class="lg:col-span-5 flex flex-col items-center lg:items-end space-y-6 mt-8 lg:mt-0">
                 <div class="w-full aspect-square flex items-center justify-center">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo Simbo Kota Bogor"
+                    <img src="{{ asset('images/logo-hero.png') }}" alt="Logo Simbo Kota Bogor"
                         class="w-full h-full object-contain p-4" />
                 </div>
 
@@ -69,17 +69,17 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
                 <div
                     class="bg-tertiary aspect-square rounded-[2rem] overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 shadow-lg group relative">
-                    <img src="{{ asset('images/logo-gold.png') }}" alt="Dokumentasi 1"
+                    <img src="{{ asset('images/images1.jpg') }}" alt="Dokumentasi 1"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 </div>
                 <div
                     class="bg-tertiary aspect-square rounded-[2rem] overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 shadow-lg group relative">
-                    <img src="{{ asset('images/logo-white.png') }}" alt="Dokumentasi 2"
+                    <img src="{{ asset('images/images2.jpeg') }}" alt="Dokumentasi 2"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 </div>
                 <div
                     class="bg-tertiary aspect-square rounded-[2rem] overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 shadow-lg group relative">
-                    <img src="{{ asset('images/logo-green.png') }}" alt="Dokumentasi 3"
+                    <img src="{{ asset('images/images3.jpg') }}" alt="Dokumentasi 3"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 </div>
             </div>
@@ -358,6 +358,8 @@
 
     {{-- ================================================ --}}
     {{-- SECTION: BERITA TERKINI                          --}}
+    {{-- Ganti seluruh section id="berita" yang lama dengan ini --}}
+    {{-- Pastikan controller untuk route '/' mengirim variabel $beritaTerbaru --}}
     {{-- ================================================ --}}
     <section id="berita" class="bg-white py-16 lg:py-24 text-neutral w-full">
         <div class="max-w-7xl mx-auto px-8">
@@ -369,59 +371,67 @@
                 </span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+            @if ($beritaTerbaru->isNotEmpty())
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+                    @foreach ($beritaTerbaru as $item)
+                        <a href="{{ route('berita.show', $item->id_berita) }}" class="group cursor-pointer block">
+                            <div
+                                class="bg-tertiary aspect-[4/3] rounded-[2rem] overflow-hidden transform group-hover:-translate-y-2 transition-all duration-300 shadow-md mb-6 relative">
 
-                <div class="group cursor-pointer">
-                    <div
-                        class="bg-tertiary aspect-[4/3] rounded-[2rem] overflow-hidden transform group-hover:-translate-y-2 transition-all duration-300 shadow-md mb-6 relative">
-                        <img src="berita-1.jpg" alt="Ilustrasi Berita 1"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                    </div>
-                    <h4
-                        class="font-montserrat font-bold text-base md:text-lg leading-snug group-hover:text-primary transition-colors">
-                        PLN Lakukan Pemadaman Listrik di Bogor, Ini Daftar Wilayah yang Terdampak
-                    </h4>
-                    <p class="font-worksans text-sm text-neutral/60 mt-3">24 Juni 2026 • Fasilitas Umum</p>
+                                @if ($item->gambar_berita)
+                                    <img src="{{ asset($item->gambar_berita) }}"
+                                        alt="{{ $item->judul_berita }}"
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center text-neutral/20">
+                                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15M9 11l3 3m0 0l3-3m-3 3V8" />
+                                        </svg>
+                                    </div>
+                                @endif
+
+                                {{-- Badge kategori --}}
+                                <span
+                                    class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-primary text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
+                                    {{ optional($item->kategori)->nama_kategori ?? 'Umum' }}
+                                </span>
+                            </div>
+
+                            <h4
+                                class="font-montserrat font-bold text-base md:text-lg leading-snug group-hover:text-primary transition-colors line-clamp-2">
+                                {{ $item->judul_berita }}
+                            </h4>
+                            <p class="font-worksans text-sm text-neutral/60 mt-3">
+                                {{ \Carbon\Carbon::parse($item->tanggal_publish)->translatedFormat('d F Y') }}
+                                • {{ optional($item->kategori)->nama_kategori ?? 'Umum' }}
+                            </p>
+                        </a>
+                    @endforeach
                 </div>
 
-                <div class="group cursor-pointer">
-                    <div
-                        class="bg-tertiary aspect-[4/3] rounded-[2rem] overflow-hidden transform group-hover:-translate-y-2 transition-all duration-300 shadow-md mb-6 relative">
-                        <img src="berita-2.jpg" alt="Ilustrasi Berita 2"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                    </div>
-                    <h4
-                        class="font-montserrat font-bold text-base md:text-lg leading-snug group-hover:text-primary transition-colors">
-                        Perbaikan Jalan Raya Tajur Rampung Lebih Cepat dari Target Pemerintah
-                    </h4>
-                    <p class="font-worksans text-sm text-neutral/60 mt-3">23 Juni 2026 • Infrastruktur</p>
+                <div class="flex justify-center mt-12">
+                    <a href="{{ route('berita.index') }}"
+                        class="inline-flex items-center gap-2 font-worksans font-semibold text-primary hover:text-primary/80 transition-colors">
+                        Lihat Semua Berita
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </a>
                 </div>
-
-                <div class="group cursor-pointer">
-                    <div
-                        class="bg-tertiary aspect-[4/3] rounded-[2rem] overflow-hidden transform group-hover:-translate-y-2 transition-all duration-300 shadow-md mb-6 relative">
-                        <img src="berita-3.jpg" alt="Ilustrasi Berita 3"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+            @else
+                {{-- State kosong jika belum ada berita sama sekali --}}
+                <div class="text-center py-12">
+                    <div class="w-14 h-14 rounded-full bg-tertiary/30 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-7 h-7 text-neutral/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15M9 11l3 3m0 0l3-3m-3 3V8" />
+                        </svg>
                     </div>
-                    <h4
-                        class="font-montserrat font-bold text-base md:text-lg leading-snug group-hover:text-primary transition-colors">
-                        Puskesmas Tanah Sareal Tambah Jam Operasional untuk Layanan Darurat
-                    </h4>
-                    <p class="font-worksans text-sm text-neutral/60 mt-3">21 Juni 2026 • Kesehatan</p>
+                    <p class="text-sm text-neutral/50 font-medium">Belum ada berita yang dipublikasikan.</p>
                 </div>
-
-            </div>
-
-            <div class="flex justify-center mt-12">
-                <a href="#"
-                    class="inline-flex items-center gap-2 font-worksans font-semibold text-primary hover:text-primary/80 transition-colors">
-                    Lihat Semua Berita
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                    </svg>
-                </a>
-            </div>
+            @endif
 
         </div>
     </section>
